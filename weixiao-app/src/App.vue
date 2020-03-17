@@ -1,13 +1,17 @@
 <template>
   <div id="app">
-    <img src="./assets/logo.png">
     <router-view/>
+    <Tabbar v-show="$route.meta.showTabbar"/>
   </div>
 </template>
 
 <script>
+import Tabbar from '@/components/Tabbar'
 export default {
-  name: 'App'
+  name: 'App',
+  components: {
+    Tabbar
+  }
 }
 </script>
 
@@ -18,6 +22,5 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
 }
 </style>
