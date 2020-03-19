@@ -23,4 +23,7 @@ export default {
   text-align: center;
   color: #2c3e50;
 }
+html {
+  background: #F0F8FF;
+}
 </style>

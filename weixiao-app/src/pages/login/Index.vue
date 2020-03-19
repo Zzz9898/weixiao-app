@@ -1,5 +1,5 @@
 <template>
-  <div class="login">
+  <div style="background: #F0F8FF">
     <van-image
       fit="contain"
       src="./static/images/index-logo.jpg"
@@ -58,9 +58,7 @@ export default {
 </script>
 
 <style>
-.login {
-/*  backgroundImage: 'url(./static/images/index-bg.jpg)',
-  backgroundRepeat: 'no-repeat',
-  backgroundSize: '100% 100%'*/
+.van-tab {
+  background: #F0F8FF;
 }
 </style>

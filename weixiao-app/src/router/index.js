@@ -14,6 +14,14 @@ export default new Router({
       }
     },
     {
+      path: '/register',
+      name: 'Register',
+      component: () => import('@/pages/register/Index'),
+      meta: {
+        showTabbar: false
+      }
+    },
+    {
       path: '/success',
       name: 'Success',
       component: () => import('@/components/Example'),

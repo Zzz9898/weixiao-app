@@ -19,18 +19,19 @@
         right-icon="closed-eye"
         placeholder="密码"
         :rules="[{ required: true, message: '请填写密码' }]"
+        style="margin-top: 5px;"
       />
       <div style="margin: 16px;">
         <van-button round block type="info" native-type="submit">
           登录
         </van-button>
       </div>
-      <div style="margin: 16px;">
-        <van-button round block type="info" plain>
-          注册
-        </van-button>
-      </div>
     </van-form>
+    <div style="margin: 16px;" @click="toRegister">
+      <van-button round block type="info" plain>
+        注册
+      </van-button>
+    </div>
   </div>
 </template>
 
@@ -46,6 +47,10 @@ export default {
     }
   },
   methods: {
+    toRegister () {
+      this.$refs.userForm.resetValidation()
+      this.$router.push('/register')
+    },
     onSubmit (values) {
       this.$store.dispatch('Login', this.loginForm).then(res => {
         this.$store.dispatch('GetInfo').then(res => {
@@ -60,6 +65,6 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 
 </style>

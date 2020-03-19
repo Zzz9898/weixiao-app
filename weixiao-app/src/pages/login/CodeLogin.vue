@@ -9,7 +9,7 @@
         clearable
         right-icon="phone-o"
         placeholder="请输入手机号"
-        :rules="[{ required: true, message: '请输入手机号'}]"
+        :rules="[{ validator: validPhone, message: '手机号格式不正确'}]"
       />
       <van-field
         v-model="loginForm.sms"
@@ -27,12 +27,12 @@
             登录
         </van-button>
       </div>
-      <div style="margin: 16px;">
-        <van-button round block type="info" plain>
-          注册
-        </van-button>
-      </div>
     </van-form>
+    <div style="margin: 16px;" @click="toRegister">
+      <van-button round block type="info" plain>
+        注册
+      </van-button>
+    </div>
   </div>
 </template>
 
@@ -50,14 +50,20 @@ export default {
     }
   },
   methods: {
+    toRegister () {
+      this.$refs.codeForm.resetValidation()
+      this.$router.push('/register')
+    },
+    validPhone (val) {
+      return /^1[34578]\d{9}$/.test(val)
+    },
     onSubmit () {
     },
     resetVaild () {
       this.$refs.codeForm.resetValidation()
     },
     sendingCode () {
-      console.log(this.$refs.codeForm.validate())
-      if (this.$refs.codeForm.validate()) {
+      this.$refs.codeForm.validate().then(res => {
         this.show = false
         this.count = 60
         setInterval(() => {
@@ -67,12 +73,12 @@ export default {
             this.count = this.count - 1
           }
         }, 1000)
-      }
+      })
     }
   }
 }
 </script>
 
-<style>
+<style scoped>
 
 </style>
