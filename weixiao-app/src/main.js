@@ -6,8 +6,10 @@ import router from './router'
 import Vant from 'vant'
 import store from './store'
 import 'vant/lib/index.css'
+import animated from 'animate.css'
 
 Vue.use(Vant)
+Vue.use(animated)
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */

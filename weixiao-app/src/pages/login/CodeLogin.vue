@@ -18,6 +18,7 @@
         right-icon="certificate"
         label="短信验证码"
         placeholder="请输入短信验证码"
+        style="margin-top: 5px;"
       >
         <van-button slot="button" size="small" type="primary" native-type="submit" v-show="show" @click="sendingCode">发送验证码</van-button>
         <van-button slot="button" size="small" type="primary" v-show="!show">{{count}}秒后重试</van-button>
