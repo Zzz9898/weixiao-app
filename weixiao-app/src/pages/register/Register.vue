@@ -42,6 +42,7 @@
 </template>
 
 <script>
+import { setToken } from '@/utils/auth'
 import { canRegister, register } from './api/register'
 import { Toast } from 'vant'
 export default {
@@ -56,21 +57,6 @@ export default {
     }
   },
   methods: {
-    onSubmit () {
-      this.$refs.userForm.validate().then(res => {
-        const params = {
-          username: this.registerForm.username,
-          password: this.registerForm.password
-        }
-        const that = this
-        register(params).then(res => {
-          Toast.success('注册成功！')
-          setTimeout(function () {
-            that.$parent.nextStep()
-          }, 2000)
-        })
-      })
-    },
     validaUsername (val) {
       if (val === undefined || val === null || val === '') {
         return false
@@ -86,6 +72,24 @@ export default {
     },
     validPassword (val) {
       return this.registerForm.password === this.registerForm.password2
+    },
+    onSubmit () {
+      if (this.validPassword()) {
+        const params = {
+          username: this.registerForm.username,
+          password: this.registerForm.password
+        }
+        const that = this
+        register(params).then(res => {
+          const id = res.data.id
+          setToken(res.message)
+          that.$emit('passId', id)
+          Toast.success('注册成功！')
+          setTimeout(function () {
+            that.$parent.nextStep()
+          }, 2000)
+        })
+      }
     }
   }
 }

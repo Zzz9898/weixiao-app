@@ -15,39 +15,68 @@
       <van-step>其他设置</van-step>
       <van-step>注册完成</van-step>
     </van-steps>
-    <van-button v-show="showButton" type="default" size="mini" @click="nextStep" round plain color="#A9A9A9" class="stepButton">跳过</van-button>
-    <register-user v-show="active === 0" class="animated bounceInRight"></register-user>
-    <register-info v-show="active === 1" class="animated bounceInRight"></register-info>
-    <div style="margin: 16px;" v-show="showButton">
-      <van-button round block type="info" plain @click="nextStep">
-        下一步
-      </van-button>
-    </div>
+      <van-button v-show="showButton" type="default" size="mini" @click="nextStep1" round plain color="#A9A9A9" class="stepButton">跳过</van-button>
+    <register-user v-show="active === 0" class="animated bounceInRight" @passId="getId"></register-user>
+    <register-info v-show="active === 1" class="animated bounceInRight" @passInfoForm="getInfoForm"></register-info>
+    <register-setting v-show="active === 2" class="animated bounceInRight" @passSettingForm="getSettingForm"></register-setting>
+    <register-success v-show="active === 3" class="animated bounceInRight" @updateInfo="update"></register-success>
   </div>
 </template>
 
 <script>
+import { updateInfo } from './api/register'
 import RegisterUser from './Register'
 import RegisterInfo from './Info'
+import RegisterSetting from './Setting'
+import RegisterSuccess from './Success'
 export default {
   name: 'Register',
   data () {
     return {
       active: 1,
-      showButton: true
+      showButton: true,
+      infoForm: {},
+      id: ''
     }
   },
   components: {
     RegisterUser,
-    RegisterInfo
+    RegisterInfo,
+    RegisterSetting,
+    RegisterSuccess
   },
   methods: {
+    nextStep1 () {
+      console.log("click")
+    },
     nextStep () {
       this.showButton = true
       this.active = this.active + 1
       if (this.active >= 3) {
         this.showButton = false
       }
+    },
+    getId (val) {
+      this.id = val
+      console.log(this.id)
+    },
+    getInfoForm (infoForm) {
+      this.infoForm = infoForm
+      console.log(this.infoForm)
+    },
+    getSettingForm (settingForm) {
+      this.infoForm.isHide = settingForm.isHide === true ? 1 : 0
+      this.infoForm.isChat = settingForm.isChat === true ? 1 : 0
+      this.infoForm.isSet = settingForm.isSet === true ? 1 : 0
+      this.infoForm.isAcademy = settingForm.isAcademy === true ? 1 : 0
+      console.log(this.infoForm)
+    },
+    update () {
+      this.infoForm.id = this.id
+      const para = this.infoForm
+      updateInfo(para).then((res) => {
+        this.$router.push('/Success')
+      })
     }
   }
 }
@@ -56,7 +85,7 @@ export default {
 <style>
 .stepButton {
   background: #F0F8FF;
-  float: right;
   margin: 5px;
+  float: right;
 }
 </style>

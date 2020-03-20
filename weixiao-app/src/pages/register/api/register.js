@@ -18,3 +18,11 @@ export function register (params) {
     }
   })
 }
+
+export function updateInfo (params) {
+  return request({
+    url: '/student/studentMember',
+    method: 'put',
+    data: params
+  })
+}
