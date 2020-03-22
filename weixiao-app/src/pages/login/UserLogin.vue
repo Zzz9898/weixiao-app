@@ -69,7 +69,7 @@ export default {
     onSubmit (values) {
       this.$store.dispatch('Login', this.loginForm).then(res => {
         this.$store.dispatch('GetInfo').then(res => {
-          this.$router.push('/success')
+          this.$router.push('/index')
         })
       })
     },

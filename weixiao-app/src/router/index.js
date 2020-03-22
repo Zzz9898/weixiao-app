@@ -22,6 +22,14 @@ export default new Router({
       }
     },
     {
+      path: '/index',
+      name: 'Index',
+      component: () => import('@/pages/index/Index'),
+      meta: {
+        showTabbar: true
+      }
+    },
+    {
       path: '/success',
       name: 'Success',
       component: () => import('@/components/Example'),

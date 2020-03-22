@@ -15,7 +15,7 @@
       <van-step>其他设置</van-step>
       <van-step>注册完成</van-step>
     </van-steps>
-      <van-button v-show="showButton" type="default" size="mini" @click="nextStep1" round plain color="#A9A9A9" class="stepButton">跳过</van-button>
+      <van-button v-show="showButton" type="default" size="mini" @click="nextStep" round plain color="#A9A9A9" class="stepButton">跳过</van-button>
     <register-user v-show="active === 0" class="animated bounceInRight" @passId="getId"></register-user>
     <register-info v-show="active === 1" class="animated bounceInRight" @passInfoForm="getInfoForm"></register-info>
     <register-setting v-show="active === 2" class="animated bounceInRight" @passSettingForm="getSettingForm"></register-setting>
@@ -46,9 +46,6 @@ export default {
     RegisterSuccess
   },
   methods: {
-    nextStep1 () {
-      console.log("click")
-    },
     nextStep () {
       this.showButton = true
       this.active = this.active + 1

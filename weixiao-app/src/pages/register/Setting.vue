@@ -68,11 +68,14 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .van-cell__value {
   margin-left: 10px;
 }
 span {
   margin: 2px;
+}
+form {
+  margin-top: 30px !important;
 }
 </style>

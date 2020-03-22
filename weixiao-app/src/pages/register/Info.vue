@@ -49,7 +49,7 @@
         placeholder="点击选择省市区"
         @click="showArea = true"
       />
-      <van-popup v-model="showArea" position="bottom">
+      <van-popup v-model="showArea" position="bottom" :lock-scroll="false">
         <van-area
           :area-list="areaList"
           @confirm="onConfirm"
@@ -64,7 +64,7 @@
         placeholder="选择专业"
         @click="showAcademy = true"
       />
-      <van-popup v-model="showAcademy" position="bottom">
+      <van-popup v-model="showAcademy" position="bottom" :lock-scroll="false">
         <van-picker
           ref="picker"
           show-toolbar
@@ -73,7 +73,7 @@
           :columns="columns"
           @confirm="getValue"
           @change="onChange"/>
-        </van-popup>
+      </van-popup>
         <van-field
           v-model="infoForm.autograph"
           rows="2"
@@ -148,6 +148,8 @@ export default {
 }
 </script>
 
-<style>
-
+<style scoped>
+form {
+  margin-top: 30px !important;
+}
 </style>
