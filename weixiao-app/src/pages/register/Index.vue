@@ -33,8 +33,8 @@ export default {
   name: 'Register',
   data () {
     return {
-      active: 1,
-      showButton: true,
+      active: 0,
+      showButton: false,
       infoForm: {},
       id: ''
     }
@@ -72,7 +72,7 @@ export default {
       this.infoForm.id = this.id
       const para = this.infoForm
       updateInfo(para).then((res) => {
-        this.$router.push('/Success')
+        this.$router.push('/index')
       })
     }
   }
