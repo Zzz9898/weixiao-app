@@ -3,7 +3,7 @@
     <van-search v-model="valueContent" shape="round" background="#B0E0E6" placeholder="请输入搜索关键词" @search="searchContent" show-action>
       <template #action>
         <div style="line-height: normal;">
-          <van-icon name="add-o" size="20"/>
+          <van-icon name="add-o" size="20" @click="toAdd"/>
         </div>
       </template>
     </van-search>
@@ -33,8 +33,8 @@
             v-show="flag"
           >
             <van-skeleton title avatar :row="5" :loading="isShow" v-for="item in list" :key="item.id">
-              <div class="contentItem" style="display: flex;margin-top: 5px;background: white;padding: 5px;">
-                <img :src="item.avatar" class="contentItem-img" />
+              <div class="contentItem animated fadeIn" style="display: flex;margin-top: 5px;background: white;padding: 5px;">
+                <van-image round :src="item.avatar" class="contentItem-img" />
                 <div class="contentItem-content">
                   <h3 class="contentItem-publisher">{{item.nickname}}</h3>
                   <p class="contentItem-more">{{item.content}}</p>
@@ -196,7 +196,7 @@ export default {
       getContent(props).then(res => {
         this.list = this.list.concat(res.data.entities)
         this.totalRecords = res.data.totalRecords
-        this.pageindex++
+        this.pageIndex++
         this.loading = false
         this.isShow = false
         if (this.list.length >= this.totalRecords) {
@@ -235,8 +235,8 @@ export default {
       this.getContents()
       this.$refs.sexDrop.toggle(false)
     },
-    async getCategory () {
-      await getCategory().then(res => {
+    getCategory () {
+      getCategory().then(res => {
         const data = res.data.entities
         this.result = data.map(item => item.id)
         this.resultInit = this.result
@@ -251,6 +251,9 @@ export default {
       this.loading = true
       this.isShow = true
       this.finished = false
+    },
+    toAdd () {
+      this.$router.push('/addcontent')
     },
     commentOnLoad () {
     }

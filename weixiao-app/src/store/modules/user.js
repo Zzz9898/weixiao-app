@@ -2,6 +2,7 @@ import { login, logout, getInfo } from '@/api/login'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 const user = {
   state: {
+    id: '',
     token: getToken(),
     username: '',
     truename: '',
@@ -27,6 +28,7 @@ const user = {
       state.roles = roles
     },
     SET_INFO: (state, studentInfo) => {
+      state.id = studentInfo.id
       state.username = studentInfo.username
       state.truename = studentInfo.truename
       state.nickname = studentInfo.nickname

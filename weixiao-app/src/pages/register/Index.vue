@@ -19,7 +19,7 @@
     <register-user v-show="active === 0" class="animated bounceInRight" @passId="getId"></register-user>
     <register-info v-show="active === 1" class="animated bounceInRight" @passInfoForm="getInfoForm"></register-info>
     <register-setting v-show="active === 2" class="animated bounceInRight" @passSettingForm="getSettingForm"></register-setting>
-    <register-success v-show="active === 3" class="animated bounceInRight" @updateInfo="update"></register-success>
+    <register-success v-show="active === 3" class="animated heartBeat" @updateInfo="update"></register-success>
   </div>
 </template>
 
@@ -33,7 +33,7 @@ export default {
   name: 'Register',
   data () {
     return {
-      active: 0,
+      active: 3,
       showButton: false,
       infoForm: {},
       id: ''

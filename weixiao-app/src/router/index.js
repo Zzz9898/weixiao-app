@@ -30,6 +30,14 @@ export default new Router({
       }
     },
     {
+      path: '/addcontent',
+      name: 'AddContent',
+      component: () => import('@/pages/content/Index'),
+      meta: {
+        showTabbar: false
+      }
+    },
+    {
       path: '/success',
       name: 'Success',
       component: () => import('@/components/Example'),
