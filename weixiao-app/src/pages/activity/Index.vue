@@ -1,7 +1,7 @@
 <template>
   <div style="padding: 5px;">
     <van-sticky>
-      <van-search v-model="valueContent" shape="round" background="#B0E0E6" placeholder="请输入搜索关键词" @search="searchContent" show-action>
+      <van-search v-model="title" shape="round" background="#B0E0E6" placeholder="请输入搜索活动标题" @search="searchActivity" show-action>
         <template #action>
           <div style="line-height: normal;">
             <van-icon name="add-o" size="20" @click="toAdd"/>
@@ -10,19 +10,51 @@
       </van-search>
     </van-sticky>
 
-    <van-collapse v-model="activeNames">
-      <van-collapse-item title="动态筛选" name="1">
-        <van-dropdown-menu>
-          <van-dropdown-item v-model="sex" :options="option" ref="sexDrop" @change="changeSex"/>
-          <van-dropdown-item title="类别" ref="category">
-            <van-checkbox-group v-model="result" direction="horizontal">
-              <van-checkbox v-for="item in categories" :key="item.id" :name="item.id" shape="square">{{item.categoryName}}</van-checkbox>
-            </van-checkbox-group>
-            <van-button block type="info" @click="onConfirm">确认</van-button>
-          </van-dropdown-item>
-        </van-dropdown-menu>
-      </van-collapse-item>
-    </van-collapse>
+    <van-dropdown-menu>
+      <van-dropdown-item title="筛选" ref="selects">
+        <van-field name="radio" label="活动状态">
+          <template #input>
+            <van-radio-group v-model="activityState" direction="horizontal">
+              <van-radio v-for="item in activityStateOption" :key="item.value" :name="item.value">{{item.text}}</van-radio>
+            </van-radio-group>
+          </template>
+        </van-field>
+        <van-field name="radio" label="活动类型">
+          <template #input>
+            <van-radio-group v-model="activityType" direction="horizontal">
+              <van-radio v-for="item in activityTypeOption" :key="item.value" :name="item.value">{{item.text}}</van-radio>
+            </van-radio-group>
+          </template>
+        </van-field>
+        <van-field name="radio" label="发布人">
+          <template #input>
+            <van-radio-group v-model="activitySex" direction="horizontal">
+              <van-radio v-for="item in activitySexOption" :key="item.value" :name="item.value">{{item.text}}</van-radio>
+            </van-radio-group>
+          </template>
+        </van-field>
+        <van-field name="radio" label="选择时间"
+          v-model="endTime"
+          placeholder="选择时间"
+          readonly="readonly"
+          @click="endTimePop = true">
+        </van-field>
+        <van-checkbox-group v-model="result" direction="horizontal">
+          <van-checkbox v-for="item in categories" :key="item.id" :name="item.id" shape="square">{{item.categoryName}}</van-checkbox>
+        </van-checkbox-group>
+        <van-button block type="info" @click="onConfirm">确认</van-button>
+      </van-dropdown-item>
+    </van-dropdown-menu>
+
+    <van-popup v-model="endTimePop" label="离开时间" position="bottom" :overlay="true">
+      <van-datetime-picker
+        v-model="currentDate"
+        type="datetime"
+        @cancel="endTimeSelect"
+        @confirm="endTimeSelect"
+        @change="endTimeChange"
+      />
+    </van-popup>
 
     <van-tabs @click="clickDepartment" v-model="tabValue">
       <van-tab v-for="item in department" :title="item.abridge" :key="item.id">
@@ -112,13 +144,13 @@
 import { ImagePreview } from 'vant'
 import Department from '@/resources/Department'
 import { getCategory } from '@/api/category'
-import { getContent } from './api/Content'
+import { getActivity } from './api/Activity'
 export default {
   name: 'ContentIndex',
   data () {
     return {
       flag: false,
-      valueContent: '',
+      title: '',
       result: [],
       resultInit: [],
       departmentId: '',
@@ -126,6 +158,12 @@ export default {
       pageIndex: 0,
       pageSize: 6,
       tabValue: 0,
+      activityState: 0,
+      activityType: 0,
+      activitySex: 0,
+      endTime: '',
+      currentDate: '',
+      endTimePop: false,
       totalRecords: '',
       activeNames: [],
       department: Department,
@@ -137,7 +175,17 @@ export default {
       finished: false,
       refreshing: false,
       categories: [],
-      option: [
+      activityStateOption: [
+        { text: '全部', value: 0 },
+        { text: '未结束', value: 2 },
+        { text: '已结束', value: 4 }
+      ],
+      activityTypeOption: [
+        { text: '全部', value: 0 },
+        { text: '组织活动', value: 1 },
+        { text: '报名活动', value: 2 }
+      ],
+      activitySexOption: [
         { text: '全部', value: 0 },
         { text: '男', value: 1 },
         { text: '女', value: 2 }
@@ -195,7 +243,7 @@ export default {
         pageindex: this.pageIndex,
         pagesize: this.pageSize
       }
-      getContent(props).then(res => {
+      getActivity(props).then(res => {
         this.list = this.list.concat(res.data.entities)
         this.totalRecords = res.data.totalRecords
         this.pageIndex++
@@ -206,7 +254,7 @@ export default {
         }
       })
     },
-    searchContent () {
+    searchActivity () {
       this.clearProps()
       this.getContents()
     },
@@ -229,13 +277,9 @@ export default {
     },
     onConfirm () {
       this.clearProps()
+      console.log(this.$refs.selects)
+      this.$refs.selects.toggle(false)
       this.getContents()
-      this.$refs.category.toggle()
-    },
-    changeSex () {
-      this.clearProps()
-      this.getContents()
-      this.$refs.sexDrop.toggle(false)
     },
     getCategory () {
       getCategory().then(res => {
@@ -253,6 +297,13 @@ export default {
       this.loading = true
       this.isShow = true
       this.finished = false
+    },
+    endTimeChange (e) {
+      let endTimeArr = e.getValues()
+      this.endTime = `${endTimeArr[0]}-${endTimeArr[1]}-${endTimeArr[2]}  ${endTimeArr[3]}:${endTimeArr[4]}:00`
+    },
+    endTimeSelect () {
+      this.endTimePop = false
     },
     toAdd () {
       this.$router.push('/addcontent')
@@ -324,13 +375,15 @@ export default {
 .comment-other {
   font-size: 8px;
 }
-.van-collapse >>> .van-cell {
-  padding: 3px 0 0 8px;
-  font-size: 15px;
+.van-dropdown-menu {
   height: 30px;
 }
-.van-collapse >>> .van-icon {
-  margin-right: 3px;
+.van-dropdown-menu >>> .van-dropdown-menu__item {
+  -webkit-justify-content: left;
+  justify-content: left;
+}
+.van-cell >>> .van-field__label {
+  width: 60px;
 }
 </style>
 

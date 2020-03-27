@@ -33,3 +33,22 @@ created () {
     })
   }
 ```
+
+##安装vant最新版本self
+
+
+##文字超出行显示小点
+```
+overflow: hidden;
+-webkit-line-clamp: 2;
+-webkit-box-orient: vertical;
+text-overflow: ellipsis;
+display: -webkit-box;
+```
+
+##存入换行空格显示换行空格
+```
+content为textarea输入框获取的值
+使用字符串替换存入this.content.replace(/\r\n/g, '<br/>').replace(/\n/g, '<br/>').replace(/\s/g, '&nbsp;')
+v-html="content"用标签v-html显示
+```

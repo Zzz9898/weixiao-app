@@ -3,10 +3,10 @@
     <van-tabbar v-model="active"
     active-color="#07c160"
     inactive-color="#000">
-      <van-tabbar-item name="home" icon="home-o" to="/">
+      <van-tabbar-item name="home" icon="home-o" to="/home">
         <span>首页1</span>
       </van-tabbar-item>
-      <van-tabbar-item name="search" icon="search">
+      <van-tabbar-item name="search" icon="flag-o" to="/activity">
         <span>首页2</span>
       </van-tabbar-item>
       <van-tabbar-item name="find" icon="eye-o" to="/index">

@@ -107,7 +107,7 @@ export default {
     publishContent () {
       const params = {
         studentId: this.studentId,
-        content: this.content,
+        content: this.content.replace(/\r\n/g, '<br/>').replace(/\n/g, '<br/>').replace(/\s/g, '&nbsp;'),
         images: this.images.join(';'),
         category: this.value
       }

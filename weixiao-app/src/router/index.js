@@ -38,6 +38,30 @@ export default new Router({
       }
     },
     {
+      path: '/chat',
+      name: 'Chat',
+      component: () => import('@/pages/chat/Index'),
+      meta: {
+        showTabbar: false
+      }
+    },
+    {
+      path: '/home',
+      name: 'Home',
+      component: () => import('@/pages/home/Index'),
+      meta: {
+        showTabbar: true
+      }
+    },
+    {
+      path: '/activity',
+      name: 'Activity',
+      component: () => import('@/pages/activity/Index'),
+      meta: {
+        showTabbar: true
+      }
+    },
+    {
       path: '/success',
       name: 'Success',
       component: () => import('@/components/Example'),
