@@ -34,7 +34,7 @@ created () {
   }
 ```
 
-##安装vant最新版本self
+##安装vant最新版本
 
 
 ##文字超出行显示小点
@@ -52,3 +52,5 @@ content为textarea输入框获取的值
 使用字符串替换存入this.content.replace(/\r\n/g, '<br/>').replace(/\n/g, '<br/>').replace(/\s/g, '&nbsp;')
 v-html="content"用标签v-html显示
 ```
+
+##后台管理，将活动、动态内容展示改为v-html

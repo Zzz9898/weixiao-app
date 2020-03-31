@@ -47,7 +47,7 @@
 <script>
 import { getMaxSize } from '@/api/config'
 import { getCategory } from '@/api/category'
-import { upload, postContent } from './api/content'
+import { upload, postContent } from './api/Content'
 import { Toast } from 'vant'
 export default {
   name: 'ContentAdd',

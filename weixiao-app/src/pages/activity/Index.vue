@@ -4,7 +4,7 @@
       <van-search v-model="title" shape="round" background="#B0E0E6" placeholder="请输入搜索活动标题" @search="searchActivity" show-action>
         <template #action>
           <div style="line-height: normal;">
-            <van-icon name="add-o" size="20" @click="toAdd"/>
+            <van-icon name="add-o" size="20" @click="toAddActivity"/>
           </div>
         </template>
       </van-search>
@@ -12,47 +12,53 @@
 
     <van-dropdown-menu>
       <van-dropdown-item title="筛选" ref="selects">
-        <van-field name="radio" label="活动状态">
+        <van-field name="state" label="活动状态">
           <template #input>
             <van-radio-group v-model="activityState" direction="horizontal">
               <van-radio v-for="item in activityStateOption" :key="item.value" :name="item.value">{{item.text}}</van-radio>
             </van-radio-group>
           </template>
         </van-field>
-        <van-field name="radio" label="活动类型">
+        <van-field name="acitvityCategory" label="活动类别">
           <template #input>
             <van-radio-group v-model="activityType" direction="horizontal">
               <van-radio v-for="item in activityTypeOption" :key="item.value" :name="item.value">{{item.text}}</van-radio>
             </van-radio-group>
           </template>
         </van-field>
-        <van-field name="radio" label="发布人">
+        <van-field name="category" label="活动类型">
           <template #input>
-            <van-radio-group v-model="activitySex" direction="horizontal">
+            <van-checkbox-group v-model="result" direction="horizontal">
+              <van-checkbox v-for="item in categories" :key="item.id" :name="item.id" shape="square">{{item.categoryName}}
+              </van-checkbox>
+            </van-checkbox-group>
+          </template>
+        </van-field>
+        <van-field name="publisher" label="发布人">
+          <template #input>
+            <van-radio-group v-model="sex" direction="horizontal">
               <van-radio v-for="item in activitySexOption" :key="item.value" :name="item.value">{{item.text}}</van-radio>
             </van-radio-group>
           </template>
         </van-field>
-        <van-field name="radio" label="选择时间"
-          v-model="endTime"
+        <van-field name="time" label="活动时间"
+          v-model="activityTime"
           placeholder="选择时间"
           readonly="readonly"
-          @click="endTimePop = true">
-        </van-field>
-        <van-checkbox-group v-model="result" direction="horizontal">
-          <van-checkbox v-for="item in categories" :key="item.id" :name="item.id" shape="square">{{item.categoryName}}</van-checkbox>
-        </van-checkbox-group>
+          @click="activityTimePop = true" />
         <van-button block type="info" @click="onConfirm">确认</van-button>
       </van-dropdown-item>
     </van-dropdown-menu>
 
-    <van-popup v-model="endTimePop" label="离开时间" position="bottom" :overlay="true">
+    <van-popup v-model="activityTimePop" label="活动时间" position="bottom" :overlay="true" >
       <van-datetime-picker
         v-model="currentDate"
+        title="请选择时间"
         type="datetime"
-        @cancel="endTimeSelect"
-        @confirm="endTimeSelect"
-        @change="endTimeChange"
+        :minDate="minDate"
+        @cancel="activityTimeSelectCancel"
+        @confirm="activityTimeSelect"
+        @change="activityTimeChange"
       />
     </van-popup>
 
@@ -71,6 +77,15 @@
                 <van-image round :src="item.avatar" class="contentItem-img" />
                 <div class="contentItem-content">
                   <h3 class="contentItem-publisher">{{item.nickname}}</h3>
+                  <div style="text-align: center;">
+                    <p class="contentItem-title">{{item.title}}</p>
+                  </div>
+                  <div>
+                    <van-tag round type="success" v-show="item.type === 1">组织活动</van-tag>
+                    <van-tag round type="success" v-show="item.type === 2">报名活动</van-tag>
+                  </div>
+                  <p class="contentItem-time">活动时间: {{item.startTime}} 到 {{item.endTime}}</p>
+                  <p class="contentItem-more">{{item.abs}}</p>
                   <p class="contentItem-more" v-html="item.content"></p>
                   <van-grid :border="false" :column-num="3">
                     <van-grid-item v-for="(image, index) in item.images" :key="index" @click="clickImages(item.images)">
@@ -80,7 +95,7 @@
                 </div>
               </div>
               <div style="background: white;text-align: right;padding-right: 15px;">
-                <van-icon name="like-o" :badge="item.lookNum" style="margin-right: 5px;" color="red"/>
+                <van-icon name="friends-o" :badge="item.signNumber" style="margin-right: 5px;" color="#ADD8E6" v-show="item.type === 2" @click="toSignMessage(item.id, item.title, item.signNumber)"/>
                 <van-icon name="comment-o" color="#DEB887" @click="showComment = true"/>
               </div>
               <div style="text-align: right;background: white;padding-right: 5px;">
@@ -141,7 +156,7 @@
 </template>
 
 <script>
-import { ImagePreview } from 'vant'
+import { ImagePreview, Dialog } from 'vant'
 import Department from '@/resources/Department'
 import { getCategory } from '@/api/category'
 import { getActivity } from './api/Activity'
@@ -156,14 +171,14 @@ export default {
       departmentId: '',
       sex: 0,
       pageIndex: 0,
+      activityState: 2,
+      activityType: 0,
+      activityTime: '',
       pageSize: 6,
       tabValue: 0,
-      activityState: 0,
-      activityType: 0,
-      activitySex: 0,
-      endTime: '',
+      minDate: new Date(2020, 0, 1),
       currentDate: '',
-      endTimePop: false,
+      activityTimePop: false,
       totalRecords: '',
       activeNames: [],
       department: Department,
@@ -176,7 +191,6 @@ export default {
       refreshing: false,
       categories: [],
       activityStateOption: [
-        { text: '全部', value: 0 },
         { text: '未结束', value: 2 },
         { text: '已结束', value: 4 }
       ],
@@ -226,6 +240,18 @@ export default {
     }
   },
   methods: {
+    toSignMessage (id, title, signNumber) {
+      Dialog.confirm({
+        title: title,
+        message: '该活动共' + signNumber + '人报名哦！赶紧去报名吧~',
+        confirmButtonText: '前往报名'
+      }).then(() => {
+        // on confirm
+        this.$router.push('/Success')
+      }).catch(() => {
+        // on cancel
+      })
+    },
     onLoad () {
       if (this.refreshing) {
         this.pageIndex = 0
@@ -236,8 +262,11 @@ export default {
     },
     getContents () {
       const props = {
-        valuecontent: this.valueContent,
+        title: this.title,
         sex: this.sex,
+        activitystate: this.activityState,
+        activitytype: this.activityType,
+        activitytime: this.activityTime,
         category: this.result.join(','),
         departmentid: this.tabValue,
         pageindex: this.pageIndex,
@@ -277,7 +306,6 @@ export default {
     },
     onConfirm () {
       this.clearProps()
-      console.log(this.$refs.selects)
       this.$refs.selects.toggle(false)
       this.getContents()
     },
@@ -298,15 +326,25 @@ export default {
       this.isShow = true
       this.finished = false
     },
-    endTimeChange (e) {
-      let endTimeArr = e.getValues()
-      this.endTime = `${endTimeArr[0]}-${endTimeArr[1]}-${endTimeArr[2]}  ${endTimeArr[3]}:${endTimeArr[4]}:00`
+    activityTimeChange (e) {
+      let activityTimeArr = e.getValues()
+      this.activityTime = `${activityTimeArr[0]}-${activityTimeArr[1]}-${activityTimeArr[2]} ${activityTimeArr[3]}:${activityTimeArr[4]}:00`
     },
-    endTimeSelect () {
-      this.endTimePop = false
+    activityTimeSelect () {
+      this.activityTimePop = false
+      setTimeout(() => {
+        this.$refs.selects.toggle(true)
+      }, 10)
     },
-    toAdd () {
-      this.$router.push('/addcontent')
+    activityTimeSelectCancel () {
+      this.activityTime = ''
+      this.activityTimePop = false
+      setTimeout(() => {
+        this.$refs.selects.toggle(true)
+      }, 10)
+    },
+    toAddActivity () {
+      this.$router.push('/addactivity')
     },
     commentOnLoad () {
     }
@@ -336,6 +374,17 @@ export default {
   -webkit-box-orient: vertical;
   text-overflow: ellipsis;
   display: -webkit-box;
+}
+.contentItem-title {
+  margin: 8px 0 0;
+  font-size: 10px;
+  line-height: 20px;
+  font-weight: bold;
+}
+.contentItem-time {
+  margin: 8px 0 0;
+  font-size: 10px;
+  line-height: 20px;
 }
 .contentItem-img {
   flex-shrink: 0;

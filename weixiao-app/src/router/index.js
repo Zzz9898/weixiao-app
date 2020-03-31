@@ -38,6 +38,14 @@ export default new Router({
       }
     },
     {
+      path: '/addactivity',
+      name: 'AddActivity',
+      component: () => import('@/pages/activityadd/Index'),
+      meta: {
+        showTabbar: false
+      }
+    },
+    {
       path: '/chat',
       name: 'Chat',
       component: () => import('@/pages/chat/Index'),
