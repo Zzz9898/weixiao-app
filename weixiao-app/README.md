@@ -54,3 +54,11 @@ v-html="content"用标签v-html显示
 ```
 
 ##后台管理，将活动、动态内容展示改为v-html
+
+##解决元素scroll条到底部
+```
+this.$nextTick(() => {
+  document.documentElement.scrollTop = this.$refs.container.scrollHeight
+})
+有时候有效，有时候无效
+```

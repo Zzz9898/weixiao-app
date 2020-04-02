@@ -68,7 +68,7 @@
           <van-list
             v-model="loading"
             :finished="finished"
-            finished-text="没有更多了"
+            finished-text="我是有底线的"
             @load="onLoad"
             v-show="flag"
           >
@@ -81,7 +81,7 @@
                     <p class="contentItem-title">{{item.title}}</p>
                   </div>
                   <div>
-                    <van-tag round type="success" v-show="item.type === 1">组织活动</van-tag>
+                    <van-tag round type="warning" v-show="item.type === 1">组织活动</van-tag>
                     <van-tag round type="success" v-show="item.type === 2">报名活动</van-tag>
                   </div>
                   <p class="contentItem-time">活动时间: {{item.startTime}} 到 {{item.endTime}}</p>

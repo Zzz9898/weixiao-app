@@ -54,6 +54,14 @@ export default new Router({
       }
     },
     {
+      path: '/chatlist',
+      name: 'ChatList',
+      component: () => import('@/pages/chatlist/Index'),
+      meta: {
+        showTabbar: true
+      }
+    },
+    {
       path: '/home',
       name: 'Home',
       component: () => import('@/pages/home/Index'),

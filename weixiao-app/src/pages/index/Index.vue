@@ -30,7 +30,7 @@
           <van-list
             v-model="loading"
             :finished="finished"
-            finished-text="没有更多了"
+            finished-text="我是有底线的"
             @load="onLoad"
             v-show="flag"
           >

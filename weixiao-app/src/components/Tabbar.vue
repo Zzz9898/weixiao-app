@@ -2,18 +2,19 @@
   <div id="app">
     <van-tabbar v-model="active"
     active-color="#07c160"
-    inactive-color="#000">
+    inactive-color="#000"
+    @change="changeTabbar">
       <van-tabbar-item name="home" icon="home-o" to="/home">
         <span>首页1</span>
       </van-tabbar-item>
-      <van-tabbar-item name="search" icon="flag-o" to="/activity">
-        <span>首页2</span>
+      <van-tabbar-item name="activity" icon="flag-o" to="/activity">
+        <span>活动</span>
       </van-tabbar-item>
       <van-tabbar-item name="find" icon="eye-o" to="/index">
         <span>发现</span>
       </van-tabbar-item>
-      <van-tabbar-item name="chat" icon="chat-o" to="/success">
-        <span>首页4</span>
+      <van-tabbar-item name="chat" icon="chat-o" to="/chatlist">
+        <span>消息</span>
       </van-tabbar-item>
       <van-tabbar-item name="setting" icon="setting-o">
         <span>首页5</span>
@@ -27,20 +28,26 @@ export default {
   name: 'Tabbar',
   data () {
     return {
-      active: 'find'
+      active: '/'
     }
   },
   methods: {
     getItemShow () {
-      const name = this.$route.path
-      console.log(name)
+      const name = this.active
       if (name === '/home') {
         this.active = 'home'
-      } else if (name === '/search') {
-        this.active = 'search'
+      } else if (name === '/activity') {
+        this.active = 'activity'
       } else if (name === '/index') {
         this.active = 'find'
+      } else if (name === '/chatlist') {
+        this.active = 'chat'
+      } else if (name === '/') {
+        this.active = localStorage.getItem('active')
       }
+    },
+    changeTabbar () {
+      localStorage.setItem('active', this.active)
     }
   },
   mounted: function () {
