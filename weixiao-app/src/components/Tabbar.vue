@@ -13,10 +13,10 @@
       <van-tabbar-item name="find" icon="eye-o" to="/index">
         <span>发现</span>
       </van-tabbar-item>
-      <van-tabbar-item name="chat" icon="chat-o" to="/chatlist">
+      <van-tabbar-item name="chat" icon="chat-o" badge="5" to="/chatlist">
         <span>消息</span>
       </van-tabbar-item>
-      <van-tabbar-item name="setting" icon="setting-o">
+      <van-tabbar-item name="setting" icon="setting-o" to="/setting">
         <span>首页5</span>
       </van-tabbar-item>
     </van-tabbar>

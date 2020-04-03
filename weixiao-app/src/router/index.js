@@ -78,6 +78,14 @@ export default new Router({
       }
     },
     {
+      path: '/setting',
+      name: 'Setting',
+      component: () => import('@/pages/setting/Index'),
+      meta: {
+        showTabbar: true
+      }
+    },
+    {
       path: '/success',
       name: 'Success',
       component: () => import('@/components/Example'),

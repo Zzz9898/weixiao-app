@@ -8,7 +8,7 @@
       />
     </van-sticky>
 
-    <div style="padding-bottom: 0px;">
+    <div style="padding-bottom: 0px;" @click="hideClass = false">
       <div class="chatBox-content" ref="container">
           <div class="chatBox-content-demo" id="chatBox-content-demo">
 
@@ -20,15 +20,15 @@
               <div v-if="item.type === 1" class="left">
                 <div class="chat-avatars"><img :src="receiverAvatar" alt="头像"/></div>
                 <div class="chat-message">
-                  <van-image v-if="item.chatType === 3" :src="item.content" />
-                  <span v-else>{{item.content}}</span>
+                  <van-image v-if="item.chatType === 4" :src="item.content" @click="previewImage(item.content)"/>
+                  <span v-else v-html="item.content"></span>
                 </div>
               </div>
 
               <div v-else class="right">
                 <div class="chat-message">
-                  <van-image v-if="item.chatType === 3" :src="item.content" />
-                  <span v-else>{{item.content}}</span>
+                  <van-image v-if="item.chatType === 4" :src="item.content" />
+                  <span v-else v-html="item.content"></span>
                 </div>
                 <div class="chat-avatars"><img :src="myAvatar" alt="头像"/></div>
               </div>
@@ -149,12 +149,11 @@
         right-icon="smile-o"
         placeholder=""
         @focus="scrollFocus"
-        @blur="scrollBlur"
         @keyup.27="scrollBlur"
       >
         <template #button>
           <van-button type="default" round size="mini" v-show="message === ''">+</van-button>
-          <van-button type="info" round size="mini" v-show="message !== ''">发送</van-button>
+          <van-button type="info" round size="mini" @click="send" v-show="message !== ''">发送</van-button>
         </template>
       </van-field>
     </div>
@@ -162,13 +161,15 @@
 </template>
 
 <script>
+import { ImagePreview } from 'vant'
 export default {
   name: 'ChatPage',
   data () {
     return {
+      myId: this.$store.getters.id,
       show: false,
       message: '',
-      myAvatar: '',
+      myAvatar: this.$store.getters.faceImgMin,
       receiverNickname: '',
       receiverId: '',
       receiverAvatar: '',
@@ -179,45 +180,58 @@ export default {
       hideClass: false,
       chatHistory: [{
         type: 1,
-        chatType: 1,
+        chatType: 2,
         content: '给你看张图',
         dateTime: '2017-12-02 14:26:58'
       }, {
         type: 1,
-        chatType: 1,
+        chatType: 2,
         content: '给你看张图给你看张图给你看张图给你看张图给你看张图给你看张图给你看张图给你看张图给你看张图给你看张图给你看张图给你看张图给你看张图',
         dateTime: '2017-12-02 14:26:58'
       }, {
         type: 1,
-        chatType: 1,
+        chatType: 2,
         content: '给你看张图',
         dateTime: '2017-12-02 14:26:58'
       }, {
         type: 1,
-        chatType: 1,
+        chatType: 2,
         content: '给你看张图',
         dateTime: '2017-12-02 14:26:58'
       }, {
         type: 1,
-        chatType: 1,
+        chatType: 2,
         content: '给你看张图',
         dateTime: '2017-12-02 14:26:58'
       }, {
         type: 1,
-        chatType: 1,
+        chatType: 2,
         content: '给你看张图',
         dateTime: '2017-12-02 14:26:58'
       }, {
         type: 1,
-        chatType: 3,
+        chatType: 4,
         content: 'https://img.yzcdn.cn/vant/cat.jpeg',
         dateTime: '2017-12-02 14:26:58'
       }, {
         type: 2,
-        chatType: 1,
+        chatType: 2,
         content: '嗯，适合做壁纸',
         dateTime: '2017-12-02 14:26:58'
-      }]
+      }],
+      path: 'ws://192.168.190.234:8088/ws',
+      socket: '',
+      receiverContent: [],
+      sendTime: '',
+      chatType: {
+        connect: 1,
+        word: 2,
+        emoji: 3,
+        img: 4,
+        video: 5,
+        singed: 6,
+        keepalive: 7
+      }
     }
   },
   updated () {
@@ -226,6 +240,22 @@ export default {
     })
   },
   methods: {
+    send () {
+      this.sendTime = new Date(+new Date() + 8 * 3600 * 1000).toISOString().replace(/T/g, ' ').replace(/\.[\d]{3}Z/, '')
+      const content = this.message.replace(/\r\n/g, '<br/>').replace(/\n/g, '<br/>').replace(/\s/g, '&nbsp;')
+      this.message = ''
+      const chatMessage = {
+        type: 2,
+        chatType: 1,
+        content: content,
+        dateTime: this.sendTime
+      }
+      this.chatHistory.push(chatMessage)
+      this.hideClass = false
+      this.scrollToBottom()
+      const dataContent = this.getDataContent(content, this.chatType.word)
+      this.websocketsend(dataContent)
+    },
     onClickLeft () {
       this.$router.go(-1)
     },
@@ -237,7 +267,6 @@ export default {
       this.hideClass = false
     },
     getReceiverInfo () {
-      this.myAvatar = this.$route.params.myAvatar
       this.receiverId = this.$route.params.receiverId
       this.receiverNickname = this.$route.params.nickname
       this.receiverAvatar = this.$route.params.avatar
@@ -246,11 +275,77 @@ export default {
       this.$nextTick(() => {
         document.documentElement.scrollTop = this.$refs.container.scrollHeight
       })
+    },
+    previewImage (image) {
+      ImagePreview({
+        images: [
+          image
+        ],
+        closeable: true
+      })
+    },
+    initWebSocket () {
+      console.log('init')
+      this.socket = sessionStorage.getItem('socket')
+      console.log(this.socket)
+      if (this.socket === null || this.socket === undefined || this.socket === '{}') {
+        this.socket = new WebSocket(this.path)
+        this.socket.onmessage = this.websocketonmessage
+        this.socket.onopen = this.websocketonopen
+        this.socket.onerror = this.websocketonerror
+        this.socket.onclose = this.websocketclose
+      }
+    },
+    websocketonopen () {
+      console.log('socket连接成功')
+      console.log(this.socket)
+      console.log(JSON.stringify(this.socket))
+      const dataContent = this.getDataContent('', this.chatType.connect)
+      sessionStorage.setItem('socket', JSON.stringify(this.socket))
+      this.websocketsend(dataContent)
+    },
+    websocketonerror () {
+      this.initWebSocket()
+    },
+    websocketonmessage (e) {
+      console.log('收到消息')
+      console.log(e.data)
+      const data = JSON.parse(e.data)
+      const chatMessage = {
+        type: 1,
+        chatType: data.action,
+        content: data.chatInfo.message,
+        dateTime: data.extend
+      }
+      this.chatHistory.push(chatMessage)
+      this.scrollToBottom()
+    },
+    websocketsend (Data) {
+      console.log(this.socket)
+      this.socket.send(JSON.stringify(Data))
+    },
+    websocketclose (e) {
+      console.log('断开连接', e)
+    },
+    getDataContent (message, type) {
+      const chatInfo = {
+        senderId: this.myId,
+        receiverId: this.receiverId,
+        message: message,
+        msgId: 0
+      }
+      const dataContent = {
+        action: type,
+        chatInfo: chatInfo,
+        extend: this.sendTime
+      }
+      return dataContent
     }
   },
   mounted: function () {
     this.getReceiverInfo()
     this.scrollToBottom()
+    this.initWebSocket()
   }
 }
 </script>

@@ -26,6 +26,9 @@
           </div>
           <div class="contentItem-time">
             2020-04-01 15:15
+            <p style="padding: 0;margin: 0;">
+              <van-tag round type="danger">1</van-tag>
+            </p>
           </div>
         </div>
         <template #right>
@@ -77,7 +80,6 @@ export default {
       this.$router.push({
         name: 'Chat',
         params: {
-          myAvatar: this.avatar,
           receiverId: receiverId,
           avatar: avatar,
           nickname: nickname
