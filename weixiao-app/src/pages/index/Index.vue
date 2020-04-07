@@ -36,7 +36,7 @@
           >
             <van-skeleton title avatar :row="5" :loading="isShow" v-for="item in list" :key="item.id">
               <div class="contentItem animated fadeIn" style="display: flex;margin-top: 5px;background: white;padding: 5px;">
-                <van-image round :src="item.avatar" class="contentItem-img" />
+                <van-image round :src="item.avatar" class="contentItem-img" @click="toInfo(item.studentId, item.avatar, item.nickname)"/>
                 <div class="contentItem-content">
                   <h3 class="contentItem-publisher">{{item.nickname}}</h3>
                   <p class="contentItem-more" v-html="item.content"></p>
@@ -178,6 +178,16 @@ export default {
     }
   },
   methods: {
+    toInfo (studentId, avatar, nickname) {
+      this.$router.push({
+        name: 'Info',
+        params: {
+          studentId: studentId,
+          avatar: avatar,
+          nickname: nickname
+        }
+      })
+    },
     onLoad () {
       if (this.refreshing) {
         this.pageIndex = 0

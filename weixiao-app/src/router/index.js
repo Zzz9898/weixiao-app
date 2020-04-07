@@ -86,6 +86,14 @@ export default new Router({
       }
     },
     {
+      path: '/info',
+      name: 'Info',
+      component: () => import('@/pages/info/Index'),
+      meta: {
+        showTabbar: false
+      }
+    },
+    {
       path: '/success',
       name: 'Success',
       component: () => import('@/components/Example'),

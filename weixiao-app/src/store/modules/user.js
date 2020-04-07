@@ -27,6 +27,9 @@ const user = {
     SET_ROLES: (state, roles) => {
       state.roles = roles
     },
+    SET_AVATAR: (state, avatar) => {
+      state.faceImgMin = avatar
+    },
     SET_INFO: (state, studentInfo) => {
       state.id = studentInfo.id
       state.username = studentInfo.username
@@ -47,6 +50,11 @@ const user = {
   },
 
   actions: {
+
+    SetFace ({ commit }, avatar) {
+      commit('SET_AVATAR', avatar)
+    },
+
     // 登录
     Login ({ commit }, userInfo) {
       const username = userInfo.username.trim()

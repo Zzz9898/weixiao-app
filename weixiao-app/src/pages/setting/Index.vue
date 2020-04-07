@@ -5,27 +5,46 @@
     />
 
     <div style="background: white;">
-      <van-image :src="avatar" width="100" height="100" class="avatar"/>
+      <van-uploader
+        :max-count="1"
+        :max-size="maxSize"
+        :after-read="afterRead"
+        :before-read="beforeRead">
+        <van-image :src="avatar" width="100" height="100" round class="avatar"/>
+      </van-uploader>
     </div>
 
     <div class="thingItems">
       <van-grid :border="false" :column-num="3">
-        <van-grid-item
+<!--         <van-grid-item
           icon="star"
-          text="1"
+          :text="postCollectNum"
         />
         <van-grid-item
           icon="coupon"
-          text="3"
+          :text="postContentNum"
         />
         <van-grid-item
           icon="flag-o"
-          text="2"
-        />
+          :text="9"
+        /> -->
+        <van-grid-item>
+          <van-icon name="star" size="40"/>
+          <span>{{postCollectNum}}</span>
+        </van-grid-item>
+        <van-grid-item>
+          <van-icon name="coupon" size="40"/>
+          <span>{{postContentNum}}</span>
+        </van-grid-item>
+        <van-grid-item>
+          <van-icon name="flag-o" size="40"/>
+          <span>{{postActivityNum + postSignNum}}</span>
+        </van-grid-item>
       </van-grid>
     </div>
 
     <div class="cellItems">
+      <van-cell title="我关注的" is-link />
       <van-cell title="个人信息" is-link />
       <van-cell title="设置" is-link />
       <van-cell title="举报中心" is-link />
@@ -35,14 +54,62 @@
 </template>
 
 <script>
+import { getMaxSize } from '@/api/config'
+import { upload, updateFace, getPostInfo } from './api/Setting'
+import { Toast } from 'vant'
 export default {
   name: 'SettingIndex',
   data () {
     return {
-      avatar: this.$store.getters.faceImgMin
+      id: this.$store.getters.id,
+      avatar: this.$store.getters.faceImgMin,
+      postContentNum: 0,
+      postActivityNum: 1,
+      postSignNum: 0,
+      postCollectNum: 0,
+      maxSize: getMaxSize()
     }
   },
-  mounted: function() {
+  methods: {
+    afterRead (file) {
+      const formData = new FormData()
+      formData.append('id', this.id)
+      formData.append('file', file.file)
+      upload(formData).then(res => {
+        const para = {
+          id: this.id,
+          faceImg: res.data
+        }
+        this.$store.dispatch('SetFace', res.data)
+        this.avatar = res.data
+        updateFace(para).then(res => {
+          Toast.success('上传成功！')
+        })
+      })
+    },
+    beforeRead (file) {
+      if (file.size > this.maxSize) {
+        const data = this.maxSize / 1048576
+        Toast.fail('图片大小限制' + data + 'M~')
+        return false
+      } else {
+        return true
+      }
+    },
+    getPostInfo () {
+      const para = {
+        id: this.id
+      }
+      getPostInfo(para).then(res => {
+        this.postContentNum = res.data.contentNum
+        this.postActivityNum = res.data.activityPublishNum
+        this.postSignNum = res.data.activitySignNum
+        this.postCollectNum = res.data.collectNum
+      })
+    }
+  },
+  mounted: function () {
+    this.getPostInfo()
   }
 }
 </script>

@@ -1,12 +1,12 @@
 <template>
-  <div style="height: 100%;">
+  <div style="height: 100%;" class="chatlist">
 
     <van-sticky>
       <van-nav-bar
         title="消息"
       >
-        <template #left>
-          <van-image :src="avatar" width="32" height="32"/>
+        <template #left class="left">
+          <van-image :src="avatar" round width="32" height="32"/>
         </template>
         <template #right>
           <van-icon name="add-o" size="18" color="gray"/>
@@ -139,6 +139,9 @@ export default {
 }
 .van-nav-bar__left >>> .van-image__img {
   margin-top: 12px;
+}
+.van-nav-bar__left >>> .van-image--round {
+  overflow: inherit;
 }
 .contentItem-content {
   text-align: left;

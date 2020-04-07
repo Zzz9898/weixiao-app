@@ -5,7 +5,7 @@
     inactive-color="#000"
     @change="changeTabbar">
       <van-tabbar-item name="home" icon="home-o" to="/home">
-        <span>首页1</span>
+        <span>首页</span>
       </van-tabbar-item>
       <van-tabbar-item name="activity" icon="flag-o" to="/activity">
         <span>活动</span>
@@ -17,7 +17,7 @@
         <span>消息</span>
       </van-tabbar-item>
       <van-tabbar-item name="setting" icon="setting-o" to="/setting">
-        <span>首页5</span>
+        <span>设置</span>
       </van-tabbar-item>
     </van-tabbar>
   </div>
