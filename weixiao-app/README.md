@@ -34,7 +34,7 @@ created () {
   }
 ```
 
-##安装vant最新版本
+##安装vant最新版本 √
 
 
 ##文字超出行显示小点
@@ -61,4 +61,21 @@ this.$nextTick(() => {
   document.documentElement.scrollTop = this.$refs.container.scrollHeight
 })
 有时候有效，有时候无效
+```
+
+##实现前进刷新，后退缓存
+npm i -S vue-navigation
+main.js
+```
+import Navigation from 'vue-navigation'
+
+Vue.use(Navigation, {router})
+```
+App.vue
+```
+<template>
+  <navigation>
+    <router-view></router-view>
+  </navigation>
+</template>
 ```

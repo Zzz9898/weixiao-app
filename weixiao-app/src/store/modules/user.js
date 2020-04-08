@@ -17,12 +17,16 @@ const user = {
     academy: '',
     autograph: '',
     hide: '',
-    roles: []
+    roles: [],
+    websocket: {}
   },
 
   mutations: {
     SET_TOKEN: (state, token) => {
       state.token = token
+    },
+    SET_WS: (state, ws) => {
+      state.websocket = ws
     },
     SET_ROLES: (state, roles) => {
       state.roles = roles
@@ -83,6 +87,23 @@ const user = {
             const role = ['common']
             commit('SET_ROLES', role)
           }
+          const ws = new WebSocket('ws://192.168.190.234:8088/ws')
+          ws.onopen = () => {
+            console.log('socket连接成功')
+            const chatInfo = {
+              senderId: data.id,
+              receiverId: '',
+              message: '',
+              msgId: 0
+            }
+            const dataContent = {
+              action: 1,
+              chatInfo: chatInfo,
+              extend: ''
+            }
+            ws.send(JSON.stringify(dataContent))
+          }
+          commit('SET_WS', ws)
           commit('SET_INFO', data)
           resolve(response)
         }).catch(error => {

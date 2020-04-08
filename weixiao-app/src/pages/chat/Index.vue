@@ -178,47 +178,48 @@ export default {
         minHeight: 20
       },
       hideClass: false,
-      chatHistory: [{
-        type: 1,
-        chatType: 2,
-        content: '给你看张图',
-        dateTime: '2017-12-02 14:26:58'
-      }, {
-        type: 1,
-        chatType: 2,
-        content: '给你看张图给你看张图给你看张图给你看张图给你看张图给你看张图给你看张图给你看张图给你看张图给你看张图给你看张图给你看张图给你看张图',
-        dateTime: '2017-12-02 14:26:58'
-      }, {
-        type: 1,
-        chatType: 2,
-        content: '给你看张图',
-        dateTime: '2017-12-02 14:26:58'
-      }, {
-        type: 1,
-        chatType: 2,
-        content: '给你看张图',
-        dateTime: '2017-12-02 14:26:58'
-      }, {
-        type: 1,
-        chatType: 2,
-        content: '给你看张图',
-        dateTime: '2017-12-02 14:26:58'
-      }, {
-        type: 1,
-        chatType: 2,
-        content: '给你看张图',
-        dateTime: '2017-12-02 14:26:58'
-      }, {
-        type: 1,
-        chatType: 4,
-        content: 'https://img.yzcdn.cn/vant/cat.jpeg',
-        dateTime: '2017-12-02 14:26:58'
-      }, {
-        type: 2,
-        chatType: 2,
-        content: '嗯，适合做壁纸',
-        dateTime: '2017-12-02 14:26:58'
-      }],
+      chatHistory: [],
+      // chatHistory: [{
+      //   type: 1,
+      //   chatType: 2,
+      //   content: '给你看张图',
+      //   dateTime: '2017-12-02 14:26:58'
+      // }, {
+      //   type: 1,
+      //   chatType: 2,
+      //   content: '给你看张图给你看张图给你看张图给你看张图给你看张图给你看张图给你看张图给你看张图给你看张图给你看张图给你看张图给你看张图给你看张图',
+      //   dateTime: '2017-12-02 14:26:58'
+      // }, {
+      //   type: 1,
+      //   chatType: 2,
+      //   content: '给你看张图',
+      //   dateTime: '2017-12-02 14:26:58'
+      // }, {
+      //   type: 1,
+      //   chatType: 2,
+      //   content: '给你看张图',
+      //   dateTime: '2017-12-02 14:26:58'
+      // }, {
+      //   type: 1,
+      //   chatType: 2,
+      //   content: '给你看张图',
+      //   dateTime: '2017-12-02 14:26:58'
+      // }, {
+      //   type: 1,
+      //   chatType: 2,
+      //   content: '给你看张图',
+      //   dateTime: '2017-12-02 14:26:58'
+      // }, {
+      //   type: 1,
+      //   chatType: 4,
+      //   content: 'https://img.yzcdn.cn/vant/cat.jpeg',
+      //   dateTime: '2017-12-02 14:26:58'
+      // }, {
+      //   type: 2,
+      //   chatType: 2,
+      //   content: '嗯，适合做壁纸',
+      //   dateTime: '2017-12-02 14:26:58'
+      // }],
       path: 'ws://192.168.190.234:8088/ws',
       socket: '',
       receiverContent: [],
@@ -231,7 +232,8 @@ export default {
         video: 5,
         singed: 6,
         keepalive: 7
-      }
+      },
+      index: -1
     }
   },
   updated () {
@@ -250,11 +252,123 @@ export default {
         content: content,
         dateTime: this.sendTime
       }
-      this.chatHistory.push(chatMessage)
+      this.setHistory(chatMessage)
       this.hideClass = false
       this.scrollToBottom()
       const dataContent = this.getDataContent(content, this.chatType.word)
       this.websocketsend(dataContent)
+    },
+    setHistory (chatMessage) {
+      // 处理聊天消息
+      if (this.chatHistory === '' || this.chatHistory === null || this.chatHistory === undefined) {
+        const history = [{
+          type: chatMessage.type,
+          chatType: chatMessage.chatType,
+          content: chatMessage.content,
+          dateTime: chatMessage.dateTime
+        }]
+        this.chatHistory = history
+        localStorage.setItem(this.myId + '-' + this.receiverId, JSON.stringify(this.chatHistory))
+      } else {
+        const item = {
+          type: chatMessage.type,
+          chatType: chatMessage.chatType,
+          content: chatMessage.content,
+          dateTime: chatMessage.dateTime
+        }
+        this.chatHistory.push(item)
+        localStorage.setItem(this.myId + '-' + this.receiverId, JSON.stringify(this.chatHistory))
+      }
+
+      // 处理聊天列表
+      const dataobj = JSON.parse(localStorage.getItem(this.myId + '-chatList'))
+      if (dataobj === '' || dataobj === null || dataobj === undefined) {
+        const data = [{
+          receiverId: this.receiverId,
+          avatar: this.receiverAvatar,
+          nickname: this.receiverNickname,
+          lastMessage: chatMessage.content,
+          time: this.sendTime,
+          state: 0
+        }]
+        localStorage.setItem(this.myId + '-chatList', JSON.stringify(data))
+      } else {
+        const data = {
+          receiverId: this.receiverId,
+          avatar: this.receiverAvatar,
+          nickname: this.receiverNickname,
+          lastMessage: chatMessage.content,
+          time: this.sendTime,
+          state: 0
+        }
+        dataobj.map((item, ind) => {
+          if (item.receiverId === this.receiverId) {
+            this.index = ind
+            item.lastMessage = chatMessage.content
+            item.time = chatMessage.dateTime
+          }
+        })
+        if (this.index === -1) {
+          dataobj.push(data)
+        }
+        localStorage.setItem(this.myId + '-chatList', JSON.stringify(dataobj))
+      }
+    },
+    setMessage (chatMessage) {
+      // 处理聊天消息
+      if (this.chatHistory === '' || this.chatHistory === null || this.chatHistory === undefined) {
+        const history = [{
+          type: 1,
+          chatType: chatMessage.action,
+          content: chatMessage.chatInfo.message,
+          dateTime: chatMessage.extend
+        }]
+        this.chatHistory = history
+        localStorage.setItem(this.myId + '-' + this.receiverId, JSON.stringify(this.chatHistory))
+      } else {
+        const item = {
+          type: 1,
+          chatType: chatMessage.action,
+          content: chatMessage.chatInfo.message,
+          dateTime: chatMessage.extend
+        }
+        this.chatHistory.push(item)
+        localStorage.setItem(this.myId + '-' + this.receiverId, JSON.stringify(this.chatHistory))
+      }
+
+      // 处理聊天列表
+      const dataobj = JSON.parse(localStorage.getItem(this.myId + '-chatList'))
+      if (dataobj === '' || dataobj === null || dataobj === undefined) {
+        const data = [{
+          receiverId: this.receiverId,
+          avatar: this.receiverAvatar,
+          nickname: this.receiverNickname,
+          lastMessage: chatMessage.content,
+          time: this.sendTime,
+          state: 0
+        }]
+        localStorage.setItem(this.myId + '-chatList', JSON.stringify(data))
+      } else {
+        const data = {
+          receiverId: this.receiverId,
+          avatar: this.receiverAvatar,
+          nickname: this.receiverNickname,
+          lastMessage: chatMessage.content,
+          time: this.sendTime,
+          state: 0
+        }
+        dataobj.map((item, ind) => {
+          if (item.receiverId === chatMessage.chatInfo.senderId) {
+            this.index = ind
+            item.lastMessage = chatMessage.chatInfo.message
+            item.time = chatMessage.extend
+          }
+        })
+        if (this.index === -1) {
+          dataobj.push(data)
+        }
+        localStorage.setItem(this.myId + '-chatList', JSON.stringify(dataobj))
+      }
     },
     onClickLeft () {
       this.$router.go(-1)
@@ -270,6 +384,7 @@ export default {
       this.receiverId = this.$route.params.receiverId
       this.receiverNickname = this.$route.params.nickname
       this.receiverAvatar = this.$route.params.avatar
+      this.chatHistory = JSON.parse(localStorage.getItem(this.myId + '-' + this.receiverId))
     },
     scrollToBottom () {
       this.$nextTick(() => {
@@ -285,23 +400,22 @@ export default {
       })
     },
     initWebSocket () {
-      console.log('init')
-      this.socket = sessionStorage.getItem('socket')
+      this.socket = this.$store.getters.websocket
+      // console.log('init')
+      // this.socket = JSON.parse(sessionStorage.getItem('socket'))
       console.log(this.socket)
       if (this.socket === null || this.socket === undefined || this.socket === '{}') {
         this.socket = new WebSocket(this.path)
-        this.socket.onmessage = this.websocketonmessage
-        this.socket.onopen = this.websocketonopen
-        this.socket.onerror = this.websocketonerror
-        this.socket.onclose = this.websocketclose
       }
+      this.socket.onmessage = this.websocketonmessage
+      this.socket.onopen = this.websocketonopen
+      this.socket.onerror = this.websocketonerror
+      this.socket.onclose = this.websocketclose
     },
     websocketonopen () {
       console.log('socket连接成功')
-      console.log(this.socket)
-      console.log(JSON.stringify(this.socket))
+      // console.log(this.socket)
       const dataContent = this.getDataContent('', this.chatType.connect)
-      sessionStorage.setItem('socket', JSON.stringify(this.socket))
       this.websocketsend(dataContent)
     },
     websocketonerror () {
@@ -311,17 +425,10 @@ export default {
       console.log('收到消息')
       console.log(e.data)
       const data = JSON.parse(e.data)
-      const chatMessage = {
-        type: 1,
-        chatType: data.action,
-        content: data.chatInfo.message,
-        dateTime: data.extend
-      }
-      this.chatHistory.push(chatMessage)
+      this.setMessage(data)
       this.scrollToBottom()
     },
     websocketsend (Data) {
-      console.log(this.socket)
       this.socket.send(JSON.stringify(Data))
     },
     websocketclose (e) {

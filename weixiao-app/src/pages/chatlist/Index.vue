@@ -87,40 +87,39 @@ export default {
       })
     },
     getChatList () {
-      if (localStorage.getItem(this.id + '-chatList')) {
-        const dataobj = [{
-          receiverId: 99,
-          avatar: 'https://img.yzcdn.cn/vant/cat.jpeg',
-          nickname: 'nickname1',
-          lastMessage: '消息消息',
-          time: '2020-04-01 10:10:10'
-        }, {
-          receiverId: 98,
-          avatar: 'https://img.yzcdn.cn/vant/cat.jpeg',
-          nickname: 'nickname2',
-          lastMessage: '内容内容内容内容内容内容内容内容内容内容内容内容内容内容',
-          time: '2020-04-01 10:10:18'
-        }, {
-          receiverId: 97,
-          avatar: 'https://img.yzcdn.cn/vant/cat.jpeg',
-          nickname: 'nickname3',
-          lastMessage: '内容内容内容内容内容内容内容内容内容内容内容内容内容内容',
-          time: '2020-04-01 10:10:18'
-        }, {
-          receiverId: 96,
-          avatar: 'https://img.yzcdn.cn/vant/cat.jpeg',
-          nickname: 'nickname4',
-          lastMessage: '内容内容内容内容内容内容内容内容内容内容内容内容内容内容',
-          time: '2020-04-01 10:10:18'
-        }, {
-          receiverId: 95,
-          avatar: 'https://img.yzcdn.cn/vant/cat.jpeg',
-          nickname: 'nickname5',
-          lastMessage: '内容内容内容内容内容内容内容内容内容内容内容内容内容内容',
-          time: '2020-04-01 10:10:18'
-        }]
-        localStorage.setItem(this.id + '-chatList', JSON.stringify(dataobj))
-      }
+      // if (localStorage.getItem(this.id + '-chatList')) {
+      // const dataobj = [{
+      //   receiverId: 99,
+      //   avatar: 'https://img.yzcdn.cn/vant/cat.jpeg',
+      //   nickname: 'nickname1',
+      //   lastMessage: '消息消息',
+      //   time: '2020-04-01 10:10:10'
+      // }, {
+      //   receiverId: 98,
+      //   avatar: 'https://img.yzcdn.cn/vant/cat.jpeg',
+      //   nickname: 'nickname2',
+      //   lastMessage: '内容内容内容内容内容内容内容内容内容内容内容内容内容内容',
+      //   time: '2020-04-01 10:10:18'
+      // }, {
+      //   receiverId: 97,
+      //   avatar: 'https://img.yzcdn.cn/vant/cat.jpeg',
+      //   nickname: 'nickname3',
+      //   lastMessage: '内容内容内容内容内容内容内容内容内容内容内容内容内容内容',
+      //   time: '2020-04-01 10:10:18'
+      // }, {
+      //   receiverId: 96,
+      //   avatar: 'https://img.yzcdn.cn/vant/cat.jpeg',
+      //   nickname: 'nickname4',
+      //   lastMessage: '内容内容内容内容内容内容内容内容内容内容内容内容内容内容',
+      //   time: '2020-04-01 10:10:18'
+      // }, {
+      //   receiverId: 95,
+      //   avatar: 'https://img.yzcdn.cn/vant/cat.jpeg',
+      //   nickname: 'nickname5',
+      //   lastMessage: '内容内容内容内容内容内容内容内容内容内容内容内容内容内容',
+      //   time: '2020-04-01 10:10:18'
+      // }]
+      // }
       this.chatList = JSON.parse(localStorage.getItem(this.id + '-chatList'))
       setTimeout(() => {
         this.isLoading = false

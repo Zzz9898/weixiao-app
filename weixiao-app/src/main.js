@@ -8,7 +8,9 @@ import store from './store'
 import 'vant/lib/index.css'
 import animated from 'animate.css'
 import socket from '@/utils/socket'
+// import Navigation from 'vue-navigation'
 
+// Vue.use(Navigation, {router})
 Vue.use(Vant)
 Vue.use(animated)
 Vue.config.productionTip = false

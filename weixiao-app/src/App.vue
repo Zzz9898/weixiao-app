@@ -1,6 +1,8 @@
 <template>
   <div id="app">
+<!--     <navigation> -->
     <router-view/>
+    <!-- </navigation> -->
     <Tabbar v-show="$route.meta.showTabbar"/>
   </div>
 </template>
