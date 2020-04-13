@@ -50,6 +50,64 @@ const user = {
       state.autograph = studentInfo.autograph
       state.hide = studentInfo.hide
     }
+    // SET_MESSAGE: (state, chatMessage) => {
+    //   const receiverId = chatMessage.chatInfo.senderId
+    //   const chatHistory = JSON.parse(localStorage.getItem(state.id + '-' + receiverId))
+    //   if (chatHistory === '' || chatHistory === null || chatHistory === undefined) {
+    //     const history = [{
+    //       type: 1,
+    //       chatType: chatMessage.action,
+    //       content: chatMessage.chatInfo.message,
+    //       dateTime: chatMessage.extend
+    //     }]
+    //     chatHistory = history
+    //     localStorage.setItem(state.id + '-' + receiverId, JSON.stringify(chatHistory))
+    //   } else {
+    //     const item = {
+    //       type: 1,
+    //       chatType: chatMessage.action,
+    //       content: chatMessage.chatInfo.message,
+    //       dateTime: chatMessage.extend
+    //     }
+    //     chatHistory.push(item)
+    //     localStorage.setItem(state.id + '-' + receiverId, JSON.stringify(chatHistory))
+    //   }
+
+    //   // 处理聊天列表
+    //   const dataobj = JSON.parse(localStorage.getItem(state.id + '-chatList'))
+    //   if (dataobj === '' || dataobj === null || dataobj === undefined) {
+    //     const data = [{
+    //       receiverId: chatMessage.chatInfo.senderId,
+    //       avatar: chatMessage.chatInfo.senderAvatar,
+    //       nickname: chatMessage.chatInfo.nickname,
+    //       lastMessage: chatMessage.content,
+    //       time: chatMessage.extend,
+    //       state: 0
+    //     }]
+    //     localStorage.setItem(state.id + '-chatList', JSON.stringify(data))
+    //   } else {
+    //     const data = {
+    //       receiverId: chatMessage.chatInfo.senderId,
+    //       avatar: chatMessage.chatInfo.senderAvatar,
+    //       nickname: chatMessage.chatInfo.nickname,
+    //       lastMessage: chatMessage.content,
+    //       time: chatMessage.extend,
+    //       state: 0
+    //     }
+    //     const index = -1
+    //     dataobj.map((item, ind) => {
+    //       if (item.receiverId === chatMessage.chatInfo.senderId) {
+    //         index = ind
+    //         item.lastMessage = chatMessage.chatInfo.message
+    //         item.time = chatMessage.extend
+    //       }
+    //     })
+    //     if (index === -1) {
+    //       dataobj.push(data)
+    //     }
+    //     localStorage.setItem(state.id + '-chatList', JSON.stringify(dataobj))
+    //   }
+    // }
 
   },
 
@@ -92,6 +150,8 @@ const user = {
             console.log('socket连接成功')
             const chatInfo = {
               senderId: data.id,
+              senderAvatar: '',
+              senderNickname: '',
               receiverId: '',
               message: '',
               msgId: 0

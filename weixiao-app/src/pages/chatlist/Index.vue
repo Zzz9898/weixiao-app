@@ -22,10 +22,10 @@
           <van-image round :src="item.avatar" class="contentItem-img" />
           <div class="contentItem-content">
             <h3 class="contentItem-publisher">{{item.nickname}}</h3>
-            <p class="contentItem-more">{{item.lastMessage}}</p>
+            <p class="contentItem-more" v-html="item.lastMessage"></p>
           </div>
           <div class="contentItem-time">
-            2020-04-01 15:15
+            {{item.time}}
             <p style="padding: 0;margin: 0;">
               <van-tag round type="danger">1</van-tag>
             </p>
@@ -124,10 +124,16 @@ export default {
       setTimeout(() => {
         this.isLoading = false
       }, 500)
+    },
+    getChatListen () {
+      this.bus.$on('chatMessage', () => {
+        this.chatList = JSON.parse(localStorage.getItem(this.id + '-chatList'))
+      })
     }
   },
   mounted: function () {
     this.getChatList()
+    this.getChatListen()
   }
 }
 </script>

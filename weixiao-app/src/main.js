@@ -7,14 +7,16 @@ import Vant from 'vant'
 import store from './store'
 import 'vant/lib/index.css'
 import animated from 'animate.css'
-import socket from '@/utils/socket'
+// import socket from '@/utils/socket'
 // import Navigation from 'vue-navigation'
 
 // Vue.use(Navigation, {router})
 Vue.use(Vant)
 Vue.use(animated)
 Vue.config.productionTip = false
-Vue.prototype.socket = socket
+
+Vue.prototype.bus = new Vue()
+// Vue.prototype.socket = socket
 
 /* eslint-disable no-new */
 new Vue({

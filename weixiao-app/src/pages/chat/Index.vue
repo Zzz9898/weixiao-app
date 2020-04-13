@@ -167,9 +167,10 @@ export default {
   data () {
     return {
       myId: this.$store.getters.id,
+      myNickname: this.$store.getters.nickname,
+      myAvatar: this.$store.getters.faceImgMin,
       show: false,
       message: '',
-      myAvatar: this.$store.getters.faceImgMin,
       receiverNickname: '',
       receiverId: '',
       receiverAvatar: '',
@@ -238,7 +239,9 @@ export default {
   },
   updated () {
     this.$nextTick(function () {
-      this.$refs.container.scrollTop = this.$refs.container.scrollHeight
+      if (this.$refs.container.scrollHeight) {
+        this.$refs.container.scrollTop = this.$refs.container.scrollHeight
+      }
     })
   },
   methods: {
@@ -338,23 +341,27 @@ export default {
 
       // 处理聊天列表
       const dataobj = JSON.parse(localStorage.getItem(this.myId + '-chatList'))
-      if (dataobj === '' || dataobj === null || dataobj === undefined) {
+      if (dataobj === '' || dataobj === null || dataobj === undefined || dataobj.length === 0) {
+        console.log('null')
+        console.log(dataobj)
         const data = [{
-          receiverId: this.receiverId,
-          avatar: this.receiverAvatar,
-          nickname: this.receiverNickname,
-          lastMessage: chatMessage.content,
-          time: this.sendTime,
+          receiverId: chatMessage.chatInfo.senderId,
+          avatar: chatMessage.chatInfo.senderAvatar,
+          nickname: chatMessage.chatInfo.senderNickname,
+          lastMessage: chatMessage.chatInfo.message,
+          time: chatMessage.extend,
           state: 0
         }]
         localStorage.setItem(this.myId + '-chatList', JSON.stringify(data))
       } else {
+        console.log('notNull')
+        console.log(dataobj)
         const data = {
-          receiverId: this.receiverId,
-          avatar: this.receiverAvatar,
-          nickname: this.receiverNickname,
-          lastMessage: chatMessage.content,
-          time: this.sendTime,
+          receiverId: chatMessage.chatInfo.senderId,
+          avatar: chatMessage.chatInfo.senderAvatar,
+          nickname: chatMessage.chatInfo.senderNickname,
+          lastMessage: chatMessage.chatInfo.message,
+          time: chatMessage.extend,
           state: 0
         }
         dataobj.map((item, ind) => {
@@ -365,6 +372,7 @@ export default {
           }
         })
         if (this.index === -1) {
+          console.log('push')
           dataobj.push(data)
         }
         localStorage.setItem(this.myId + '-chatList', JSON.stringify(dataobj))
@@ -388,7 +396,9 @@ export default {
     },
     scrollToBottom () {
       this.$nextTick(() => {
-        document.documentElement.scrollTop = this.$refs.container.scrollHeight
+        if (this.$refs.container.scrollHeight) {
+          document.documentElement.scrollTop = this.$refs.container.scrollHeight
+        }
       })
     },
     previewImage (image) {
@@ -401,13 +411,13 @@ export default {
     },
     initWebSocket () {
       this.socket = this.$store.getters.websocket
-      // console.log('init')
       // this.socket = JSON.parse(sessionStorage.getItem('socket'))
       console.log(this.socket)
       if (this.socket === null || this.socket === undefined || this.socket === '{}') {
+        console.log('init')
         this.socket = new WebSocket(this.path)
       }
-      this.socket.onmessage = this.websocketonmessage
+      // this.socket.onmessage = this.websocketonmessage
       this.socket.onopen = this.websocketonopen
       this.socket.onerror = this.websocketonerror
       this.socket.onclose = this.websocketclose
@@ -426,6 +436,9 @@ export default {
       console.log(e.data)
       const data = JSON.parse(e.data)
       this.setMessage(data)
+      setTimeout(() => {
+        this.bus.$emit('chatMessage')
+      }, 100)
       this.scrollToBottom()
     },
     websocketsend (Data) {
@@ -437,6 +450,8 @@ export default {
     getDataContent (message, type) {
       const chatInfo = {
         senderId: this.myId,
+        senderAvatar: this.myAvatar,
+        senderNickname: this.myNickname,
         receiverId: this.receiverId,
         message: message,
         msgId: 0
@@ -447,12 +462,19 @@ export default {
         extend: this.sendTime
       }
       return dataContent
+    },
+    getHistoryListen () {
+      this.bus.$on('chatHistory', () => {
+        console.log('chatHistory')
+        this.chatHistory = JSON.parse(localStorage.getItem(this.myId + '-' + this.receiverId))
+      })
     }
   },
   mounted: function () {
     this.getReceiverInfo()
     this.scrollToBottom()
     this.initWebSocket()
+    this.getHistoryListen()
   }
 }
 </script>

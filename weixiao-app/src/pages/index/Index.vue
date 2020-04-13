@@ -268,10 +268,77 @@ export default {
       this.$router.push('/addcontent')
     },
     commentOnLoad () {
+    },
+    getMessage () {
+      if (this.$store.getters.websocket.onmessage === null) {
+        this.$store.getters.websocket.onmessage = this.onMessage
+      }
+    },
+    onMessage (e) {
+      const id = this.$store.getters.id
+      const chatMessage = JSON.parse(e.data)
+      const receiverId = chatMessage.chatInfo.senderId
+      const chatHistory = JSON.parse(localStorage.getItem(id + '-' + receiverId))
+      if (chatHistory === '' || chatHistory === null || chatHistory === undefined) {
+        const history = [{
+          type: 1,
+          chatType: chatMessage.action,
+          content: chatMessage.chatInfo.message,
+          dateTime: chatMessage.extend
+        }]
+        localStorage.setItem(id + '-' + receiverId, JSON.stringify(history))
+      } else {
+        const item = {
+          type: 1,
+          chatType: chatMessage.action,
+          content: chatMessage.chatInfo.message,
+          dateTime: chatMessage.extend
+        }
+        chatHistory.push(item)
+        localStorage.setItem(id + '-' + receiverId, JSON.stringify(chatHistory))
+      }
+
+      // 处理聊天列表
+      const dataobj = JSON.parse(localStorage.getItem(id + '-chatList'))
+      if (dataobj === '' || dataobj === null || dataobj === undefined) {
+        const data = [{
+          receiverId: chatMessage.chatInfo.senderId,
+          avatar: chatMessage.chatInfo.senderAvatar,
+          nickname: chatMessage.chatInfo.senderNickname,
+          lastMessage: chatMessage.chatInfo.message,
+          time: chatMessage.extend,
+          state: 0
+        }]
+        localStorage.setItem(id + '-chatList', JSON.stringify(data))
+      } else {
+        const data = {
+          receiverId: chatMessage.chatInfo.senderId,
+          avatar: chatMessage.chatInfo.senderAvatar,
+          nickname: chatMessage.chatInfo.senderNickname,
+          lastMessage: chatMessage.chatInfo.message,
+          time: chatMessage.extend,
+          state: 0
+        }
+        var index = -1
+        dataobj.map((item, ind) => {
+          if (item.receiverId === chatMessage.chatInfo.senderId) {
+            index = ind
+            item.lastMessage = chatMessage.chatInfo.message
+            item.time = chatMessage.extend
+          }
+        })
+        if (index === -1) {
+          dataobj.push(data)
+        }
+        localStorage.setItem(id + '-chatList', JSON.stringify(dataobj))
+      }
+      this.bus.$emit('chatHistory')
+      this.bus.$emit('chatMessage')
     }
   },
   mounted: function () {
     this.getCategory()
+    this.getMessage()
   }
 }
 </script>
