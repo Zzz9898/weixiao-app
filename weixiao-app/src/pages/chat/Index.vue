@@ -465,7 +465,6 @@ export default {
     },
     getHistoryListen () {
       this.bus.$on('chatHistory', () => {
-        console.log('chatHistory')
         this.chatHistory = JSON.parse(localStorage.getItem(this.myId + '-' + this.receiverId))
       })
     }

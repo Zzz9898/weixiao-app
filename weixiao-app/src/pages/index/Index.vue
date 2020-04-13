@@ -112,7 +112,7 @@
 import { ImagePreview } from 'vant'
 import Department from '@/resources/Department'
 import { getCategory } from '@/api/category'
-import { getContent } from './api/Content'
+import { getContent, getChatOff, batchSign } from './api/Content'
 export default {
   name: 'ContentIndex',
   data () {
@@ -334,11 +334,38 @@ export default {
       }
       this.bus.$emit('chatHistory')
       this.bus.$emit('chatMessage')
+    },
+    getChat () {
+      const that = this
+      const prop = {
+        id: that.$store.getters.id
+      }
+      getChatOff(prop).then(res => {
+        const data = res.data
+        const ids = data.map(item => {
+          var arr = item.extend.split('')
+          arr.splice(10, 1, ' ')
+          item.extend = arr.join('')
+          const e = {
+            data: JSON.stringify(item)
+          }
+          that.onMessage(e)
+          return item.chatInfo.msgId
+        }).join(',')
+        if (ids.length >= 1) {
+          const param = {
+            ids: ids
+          }
+          batchSign(param).then(res => {
+          })
+        }
+      })
     }
   },
   mounted: function () {
     this.getCategory()
     this.getMessage()
+    this.getChat()
   }
 }
 </script>
