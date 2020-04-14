@@ -53,11 +53,12 @@ export default {
   },
   methods: {
     changeState (value) {
-      this.isChat = this.isSet = this.isAcademy = value
+      console.log(value)
+      this.settingForm.isChat = this.settingForm.isSet = this.settingForm.isAcademy = value
     },
     change (value) {
-      if (this.isChat === this.isSet && this.isSet === this.isAcademy) {
-        this.isHide = value
+      if (this.settingForm.isChat === this.settingForm.isSet && this.settingForm.isSet === this.settingForm.isAcademy) {
+        this.settingForm.isHide = value
       }
     },
     nextStep () {

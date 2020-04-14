@@ -33,7 +33,7 @@ export default {
   name: 'Register',
   data () {
     return {
-      active: 3,
+      active: 0,
       showButton: false,
       infoForm: {},
       id: ''

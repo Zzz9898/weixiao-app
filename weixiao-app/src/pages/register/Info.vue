@@ -2,7 +2,7 @@
   <div style="margin: 5px;">
     <van-form>
       <van-field
-        v-model="infoForm.username"
+        v-model="infoForm.truename"
         name="真实姓名"
         label="真实姓名"
         placeholder="请填写真实姓名"
@@ -94,6 +94,7 @@
 </template>
 
 <script>
+import { Toast } from 'vant'
 import Area from '@/resources/Area.js'
 import Academy from '@/resources/Academy.js'
 export default {
@@ -101,7 +102,7 @@ export default {
   data () {
     return {
       infoForm: {
-        username: '',
+        truename: '',
         nickname: '',
         number: '',
         phone: '',
@@ -141,8 +142,16 @@ export default {
       picker.setColumnValues(1, Academy[values[0]])
     },
     nextStep () {
-      this.$emit('passInfoForm', this.infoForm)
-      this.$parent.nextStep()
+      if (this.infoForm.areaId === '') {
+        Toast.fail('地区不能为空')
+        return false
+      } else if (this.infoForm.academyId === '') {
+        Toast.fail('专业不能为空')
+        return false
+      } else {
+        this.$emit('passInfoForm', this.infoForm)
+        this.$parent.nextStep()
+      }
     }
   }
 }
