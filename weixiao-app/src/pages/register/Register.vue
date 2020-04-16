@@ -83,7 +83,7 @@ export default {
         register(params).then(res => {
           const id = res.data.id
           setToken(res.message)
-          that.$emit('passId', id)
+          that.$emit('passId', id, this.registerForm.username, this.registerForm.password)
           Toast.success('注册成功！')
           setTimeout(function () {
             that.$parent.nextStep()

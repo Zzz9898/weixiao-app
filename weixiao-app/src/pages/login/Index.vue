@@ -52,7 +52,13 @@ export default {
           this.$refs.codeLogin.resetVaild()
         }
       }
+    },
+    clearStorage () {
+      sessionStorage.clear()
     }
+  },
+  mounted () {
+    this.clearStorage()
   }
 }
 </script>

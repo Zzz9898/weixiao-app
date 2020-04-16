@@ -94,6 +94,30 @@ export default new Router({
       }
     },
     {
+      path: '/myinfo',
+      name: 'MyInfo',
+      component: () => import('@/pages/myinfo/Index'),
+      meta: {
+        showTabbar: false
+      }
+    },
+    {
+      path: '/mysetting',
+      name: 'MySetting',
+      component: () => import('@/pages/mysetting/Index'),
+      meta: {
+        showTabbar: false
+      }
+    },
+    {
+      path: '/report',
+      name: 'Report',
+      component: () => import('@/pages/Report/Index'),
+      meta: {
+        showTabbar: false
+      }
+    },
+    {
       path: '/success',
       name: 'Success',
       component: () => import('@/components/Example'),

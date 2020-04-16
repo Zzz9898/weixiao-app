@@ -8,13 +8,14 @@ const user = {
     truename: '',
     nickname: '',
     sex: '',
-    age: 0,
+    age: '',
     area: '',
     number: '',
     phone: '',
     faceImg: '',
     faceImgMin: '',
     academy: '',
+    academyId: '',
     autograph: '',
     hide: '',
     roles: [],
@@ -47,8 +48,12 @@ const user = {
       state.faceImg = studentInfo.faceImg
       state.faceImgMin = studentInfo.faceImgMin
       state.academy = studentInfo.academy
+      state.academyId = studentInfo.academyId
       state.autograph = studentInfo.autograph
       state.hide = studentInfo.hide
+    },
+    SET_HIDE: (state, hide) => {
+      state.hide = hide
     }
     // SET_MESSAGE: (state, chatMessage) => {
     //   const receiverId = chatMessage.chatInfo.senderId
@@ -117,6 +122,10 @@ const user = {
       commit('SET_AVATAR', avatar)
     },
 
+    SetHide ({ commit }, hide) {
+      commit('SET_HIDE', hide)
+    },
+
     // 登录
     Login ({ commit }, userInfo) {
       const username = userInfo.username.trim()
@@ -164,6 +173,26 @@ const user = {
             ws.send(JSON.stringify(dataContent))
           }
           commit('SET_WS', ws)
+          console.log(data)
+          commit('SET_INFO', data)
+          resolve(response)
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    },
+
+    GetInfo2 ({ commit, state }) {
+      return new Promise((resolve, reject) => {
+        getInfo(state.token.slice(6)).then(response => {
+          const data = response.data
+          if (data.roles && data.roles.length > 0) { // 验证返回的roles是否是一个非空数组
+            commit('SET_ROLES', data.roles)
+          } else {
+            // reject('getInfo: roles must be a non-null array !')
+            const role = ['common']
+            commit('SET_ROLES', role)
+          }
           commit('SET_INFO', data)
           resolve(response)
         }).catch(error => {

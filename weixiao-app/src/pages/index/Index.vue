@@ -179,14 +179,20 @@ export default {
   },
   methods: {
     toInfo (studentId, avatar, nickname) {
-      this.$router.push({
-        name: 'Info',
-        params: {
-          studentId: studentId,
-          avatar: avatar,
-          nickname: nickname
-        }
-      })
+      if (studentId === this.$store.getters.id) {
+        this.$router.push({
+          name: 'Setting'
+        })
+      } else {
+        this.$router.push({
+          name: 'Info',
+          params: {
+            studentId: studentId,
+            avatar: avatar,
+            nickname: nickname
+          }
+        })
+      }
     },
     onLoad () {
       if (this.refreshing) {

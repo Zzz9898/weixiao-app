@@ -12,6 +12,9 @@
         :before-read="beforeRead">
         <van-image :src="avatar" width="100" height="100" round class="avatar"/>
       </van-uploader>
+
+      <van-field v-model="autograph" input-align="center" :readonly="edit"/>
+
     </div>
 
     <div class="thingItems">
@@ -45,15 +48,19 @@
 
     <div class="cellItems">
       <van-cell title="我关注的" is-link />
-      <van-cell title="个人信息" is-link />
-      <van-cell title="设置" is-link />
-      <van-cell title="举报中心" is-link />
+      <van-cell title="个人信息" is-link to="/myinfo"/>
+      <van-cell title="设置" is-link to="/mysetting"/>
+      <van-cell title="举报中心" is-link to="/report"/>
       <van-cell title="反馈" is-link />
     </div>
+
+    <van-button type="primary" round color="red" class="logoutButton" @click="logout">退出登录</van-button>
+
   </div>
 </template>
 
 <script>
+import { removeToken } from '@/utils/auth'
 import { getMaxSize } from '@/api/config'
 import { upload, updateFace, getPostInfo } from './api/Setting'
 import { Toast } from 'vant'
@@ -63,10 +70,12 @@ export default {
     return {
       id: this.$store.getters.id,
       avatar: this.$store.getters.faceImgMin,
+      autograph: this.$store.getters.autograph,
       postContentNum: 0,
-      postActivityNum: 1,
+      postActivityNum: 0,
       postSignNum: 0,
       postCollectNum: 0,
+      edit: true,
       maxSize: getMaxSize()
     }
   },
@@ -106,6 +115,16 @@ export default {
         this.postSignNum = res.data.activitySignNum
         this.postCollectNum = res.data.collectNum
       })
+    },
+    editAutograph () {
+      console.log('db')
+      this.edit = false
+    },
+    logout () {
+      removeToken()
+      this.$router.replace({
+        path: '/'
+      })
     }
   },
   mounted: function () {
@@ -115,12 +134,16 @@ export default {
 </script>
 
 <style scoped>
+.logoutButton {
+  margin: 35px 5px;
+  width: 320px;
+}
 .avatar {
   padding-top: 30px;
   padding-bottom: 15px;
 }
 .van-grid >>>.van-icon-star {
-  color: red;
+  color: #FF7F50;
 }
 .van-grid >>>.van-icon-flag-o {
   color: #00a0ff;

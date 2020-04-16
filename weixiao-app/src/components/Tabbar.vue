@@ -4,19 +4,19 @@
     active-color="#07c160"
     inactive-color="#000"
     @change="changeTabbar">
-      <van-tabbar-item name="home" icon="home-o" to="/home">
+      <van-tabbar-item name="home" icon="home-o" replace to="/home">
         <span>首页</span>
       </van-tabbar-item>
-      <van-tabbar-item name="activity" icon="flag-o" to="/activity">
+      <van-tabbar-item name="activity" icon="flag-o" replace  to="/activity">
         <span>活动</span>
       </van-tabbar-item>
-      <van-tabbar-item name="find" icon="eye-o" to="/index">
+      <van-tabbar-item name="find" icon="eye-o" replace to="/index">
         <span>发现</span>
       </van-tabbar-item>
-      <van-tabbar-item name="chat" icon="chat-o" badge="5" to="/chatlist">
+      <van-tabbar-item name="chat" icon="chat-o" replace badge="5" to="/chatlist">
         <span>消息</span>
       </van-tabbar-item>
-      <van-tabbar-item name="setting" icon="setting-o" to="/setting">
+      <van-tabbar-item name="setting" icon="setting-o" replace to="/setting">
         <span>设置</span>
       </van-tabbar-item>
     </van-tabbar>
@@ -28,7 +28,7 @@ export default {
   name: 'Tabbar',
   data () {
     return {
-      active: '/'
+      active: '/index'
     }
   },
   methods: {
@@ -43,11 +43,10 @@ export default {
       } else if (name === '/chatlist') {
         this.active = 'chat'
       } else if (name === '/') {
-        this.active = localStorage.getItem('active')
+        this.active = 'find'
       }
     },
     changeTabbar () {
-      localStorage.setItem('active', this.active)
     }
   },
   mounted: function () {

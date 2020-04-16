@@ -1,31 +1,31 @@
 <template>
   <div style="margin: 5px;">
     <van-form>
-      <van-field name="switch" label="是否展示信息">
+      <van-field name="switch" label="展示全部信息">
         <template #input>
           <span>否</span>&nbsp;
-          <van-switch v-model="settingForm.isHide" size="20" @change="changeState"/>
+          <van-switch v-model="settingForm.hide" size="20" @change="changeState"/>
           &nbsp;<span>是</span>
         </template>
       </van-field>
-      <van-field name="switch" label="是否允许私聊">
+      <van-field name="switch" label="允许他人私聊">
         <template #input>
           <span>否</span>&nbsp;
-          <van-switch v-model="settingForm.isChat" size="20" @change="change"/>
+          <van-switch v-model="settingForm.chat" size="20" @change="change"/>
           &nbsp;<span>是</span>
         </template>
       </van-field>
-      <van-field name="switch" label="是否展示性别">
+      <van-field name="switch" label="展示性别院部">
         <template #input>
           <span>否</span>&nbsp;
-          <van-switch v-model="settingForm.isSet" size="20" @change="change"/>
+          <van-switch v-model="settingForm.sexs" size="20" @change="change"/>
           &nbsp;<span>是</span>
         </template>
       </van-field>
-      <van-field name="switch" label="是否显示院部">
+      <van-field name="switch" label="展示姓名手机">
         <template #input>
           <span>否</span>&nbsp;
-          <van-switch v-model="settingForm.isAcademy" size="20" @change="change"/>
+          <van-switch v-model="settingForm.academy" size="20" @change="change"/>
           &nbsp;<span>是</span>
         </template>
       </van-field>
@@ -44,21 +44,20 @@ export default {
   data () {
     return {
       settingForm: {
-        isHide: true,
-        isChat: true,
-        isSet: true,
-        isAcademy: true
+        hide: true,
+        chat: true,
+        sexs: true,
+        academy: true
       }
     }
   },
   methods: {
     changeState (value) {
-      console.log(value)
-      this.settingForm.isChat = this.settingForm.isSet = this.settingForm.isAcademy = value
+      this.settingForm.chat = this.settingForm.sexs = this.settingForm.academy = value
     },
     change (value) {
-      if (this.settingForm.isChat === this.settingForm.isSet && this.settingForm.isSet === this.settingForm.isAcademy) {
-        this.settingForm.isHide = value
+      if (this.settingForm.chat === this.settingForm.sexs && this.settingForm.sexs === this.settingForm.academy) {
+        this.settingForm.hide = value
       }
     },
     nextStep () {

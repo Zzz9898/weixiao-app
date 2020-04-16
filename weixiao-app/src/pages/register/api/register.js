@@ -19,10 +19,13 @@ export function register (params) {
   })
 }
 
-export function updateInfo (params) {
+export function updateInfo (params, authorization) {
   return request({
     url: '/student/studentMember',
     method: 'put',
+    headers: {
+      'authorization': authorization
+    },
     data: params
   })
 }

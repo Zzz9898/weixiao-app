@@ -25,6 +25,7 @@
 
 <script>
 import { updateInfo } from './api/register'
+import { getToken } from '@/utils/auth'
 import RegisterUser from './Register'
 import RegisterInfo from './Info'
 import RegisterSetting from './Setting'
@@ -33,10 +34,12 @@ export default {
   name: 'Register',
   data () {
     return {
-      active: 0,
+      active: 2,
       showButton: false,
       infoForm: {},
-      id: ''
+      id: '',
+      username: '',
+      password: ''
     }
   },
   components: {
@@ -53,8 +56,10 @@ export default {
         this.showButton = false
       }
     },
-    getId (val) {
+    getId (val, username, password) {
       this.id = val
+      this.username = username
+      this.password = password
       console.log(this.id)
     },
     getInfoForm (infoForm) {
@@ -62,17 +67,25 @@ export default {
       console.log(this.infoForm)
     },
     getSettingForm (settingForm) {
-      this.infoForm.isHide = settingForm.isHide === true ? 1 : 0
-      this.infoForm.isChat = settingForm.isChat === true ? 1 : 0
-      this.infoForm.isSet = settingForm.isSet === true ? 1 : 0
-      this.infoForm.isAcademy = settingForm.isAcademy === true ? 1 : 0
+      this.infoForm.hide = settingForm.hide === true ? 1 : 0
+      this.infoForm.chat = settingForm.chat === true ? 1 : 0
+      this.infoForm.sexs = settingForm.sexs === true ? 1 : 0
+      this.infoForm.academy = settingForm.academy === true ? 1 : 0
       console.log(this.infoForm)
     },
     update () {
       this.infoForm.id = this.id
       const para = this.infoForm
-      updateInfo(para).then((res) => {
-        this.$router.push('/index')
+      const loginForm = {
+        username: this.username,
+        password: this.password
+      }
+      updateInfo(para, getToken()).then((res) => {
+        this.$store.dispatch('Login', loginForm).then(res => {
+          this.$store.dispatch('GetInfo').then(res => {
+            this.$router.replace('/index')
+          })
+        })
       })
     }
   }

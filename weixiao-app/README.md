@@ -79,3 +79,10 @@ App.vue
   </navigation>
 </template>
 ```
+
+##Object转数组
+```
+let arr = Object.values(obj)
+let arr = Object.keys(obj)
+let arr = Object.entries(obj)
+```
