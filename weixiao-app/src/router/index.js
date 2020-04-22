@@ -110,9 +110,33 @@ export default new Router({
       }
     },
     {
+      path: '/mycollect',
+      name: 'MyCollect',
+      component: () => import('@/pages/mycollect/Index'),
+      meta: {
+        showTabbar: false
+      }
+    },
+    {
       path: '/report',
       name: 'Report',
       component: () => import('@/pages/Report/Index'),
+      meta: {
+        showTabbar: false
+      }
+    },
+    {
+      path: '/contentdetail',
+      name: 'ContentDetail',
+      component: () => import('@/pages/contentdetail/Index'),
+      meta: {
+        showTabbar: false
+      }
+    },
+    {
+      path: '/activitydetail',
+      name: 'ActivityDetail',
+      component: () => import('@/pages/activitydetail/Index'),
       meta: {
         showTabbar: false
       }

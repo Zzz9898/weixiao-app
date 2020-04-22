@@ -15,7 +15,7 @@
       <van-step>其他设置</van-step>
       <van-step>注册完成</van-step>
     </van-steps>
-      <van-button v-show="showButton" type="default" size="mini" @click="nextStep" round plain color="#A9A9A9" class="stepButton">跳过</van-button>
+      <van-button v-show="showButton && active === 2" type="default" size="mini" @click="nextStep" round plain color="#A9A9A9" class="stepButton">跳过</van-button>
     <register-user v-show="active === 0" class="animated bounceInRight" @passId="getId"></register-user>
     <register-info v-show="active === 1" class="animated bounceInRight" @passInfoForm="getInfoForm"></register-info>
     <register-setting v-show="active === 2" class="animated bounceInRight" @passSettingForm="getSettingForm"></register-setting>
@@ -25,6 +25,7 @@
 
 <script>
 import { updateInfo } from './api/register'
+import { Toast } from 'vant'
 import { getToken } from '@/utils/auth'
 import RegisterUser from './Register'
 import RegisterInfo from './Info'
@@ -34,7 +35,7 @@ export default {
   name: 'Register',
   data () {
     return {
-      active: 2,
+      active: 0,
       showButton: false,
       infoForm: {},
       id: '',
@@ -80,9 +81,11 @@ export default {
         username: this.username,
         password: this.password
       }
+      Toast.loading()
       updateInfo(para, getToken()).then((res) => {
         this.$store.dispatch('Login', loginForm).then(res => {
           this.$store.dispatch('GetInfo').then(res => {
+            Toast.clear()
             this.$router.replace('/index')
           })
         })

@@ -86,3 +86,8 @@ let arr = Object.values(obj)
 let arr = Object.keys(obj)
 let arr = Object.entries(obj)
 ```
+
+##netty服务器地址修改
+@/store/user.js
+@/pages/chat/Index
+@/pages/index/content.js

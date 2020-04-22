@@ -35,11 +35,13 @@
             v-show="flag"
           >
             <van-skeleton title avatar :row="5" :loading="isShow" v-for="item in list" :key="item.id">
-              <div class="contentItem animated fadeIn" style="display: flex;margin-top: 5px;background: white;padding: 5px;">
+              <div class="contentItem animated fadeIn" style="display: flex;margin-top: 5px;background: white;padding: 5px;" @click="toDetail(item)">
                 <van-image round :src="item.avatar" class="contentItem-img" @click="toInfo(item.studentId, item.avatar, item.nickname)"/>
                 <div class="contentItem-content">
                   <h3 class="contentItem-publisher">{{item.nickname}}</h3>
-                  <p class="contentItem-more" v-html="item.content"></p>
+                  <div @click="toDetail(item)">
+                    <p class="contentItem-more" v-html="item.content" ></p>
+                  </div>
                   <van-grid :border="false" :column-num="3">
                     <van-grid-item v-for="(image, index) in item.images" :key="index" @click="clickImages(item.images)">
                       <van-image :src="image"/>
@@ -48,7 +50,7 @@
                 </div>
               </div>
               <div style="background: white;text-align: right;padding-right: 15px;">
-                <van-icon name="like-o" :badge="item.lookNum" style="margin-right: 5px;" color="red"/>
+                <van-icon name="browsing-history-o" :badge="item.lookNum" style="margin-right: 5px;"/>
                 <van-icon name="comment-o" color="#DEB887" @click="showComment = true"/>
               </div>
               <div style="text-align: right;background: white;padding-right: 5px;">
@@ -272,6 +274,15 @@ export default {
     },
     toAdd () {
       this.$router.push('/addcontent')
+    },
+    toDetail (item) {
+      this.$router.push({
+        name: 'ContentDetail',
+        params: {
+          id: item.id,
+          studentId: this.$store.getters.id
+        }
+      })
     },
     commentOnLoad () {
     },

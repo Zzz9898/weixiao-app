@@ -32,7 +32,7 @@
           :text="9"
         /> -->
         <van-grid-item>
-          <van-icon name="star" size="40"/>
+          <van-icon name="star" size="40" @click="toMyCollect()"/>
           <span>{{postCollectNum}}</span>
         </van-grid-item>
         <van-grid-item>
@@ -119,6 +119,9 @@ export default {
     editAutograph () {
       console.log('db')
       this.edit = false
+    },
+    toMyCollect () {
+      this.$router.push("/mycollect")
     },
     logout () {
       removeToken()

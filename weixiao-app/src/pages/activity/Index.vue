@@ -80,13 +80,15 @@
                   <div style="text-align: center;">
                     <p class="contentItem-title">{{item.title}}</p>
                   </div>
-                  <div>
-                    <van-tag round type="warning" v-show="item.type === 1">组织活动</van-tag>
-                    <van-tag round type="success" v-show="item.type === 2">报名活动</van-tag>
+                  <div @click="toDetail(item)">
+                    <div>
+                      <van-tag round type="warning" v-show="item.type === 1">组织活动</van-tag>
+                      <van-tag round type="success" v-show="item.type === 2">报名活动</van-tag>
+                    </div>
+                    <p class="contentItem-time">活动时间: {{item.startTime}} 到 {{item.endTime}}</p>
+                    <p class="contentItem-more">{{item.abs}}</p>
+                    <p class="contentItem-more" v-html="item.content"></p>
                   </div>
-                  <p class="contentItem-time">活动时间: {{item.startTime}} 到 {{item.endTime}}</p>
-                  <p class="contentItem-more">{{item.abs}}</p>
-                  <p class="contentItem-more" v-html="item.content"></p>
                   <van-grid :border="false" :column-num="3">
                     <van-grid-item v-for="(image, index) in item.images" :key="index" @click="clickImages(item.images)">
                       <van-image :src="image"/>
@@ -352,6 +354,14 @@ export default {
       setTimeout(() => {
         this.$refs.selects.toggle(true)
       }, 10)
+    },
+    toDetail (item) {
+      this.$router.push({
+        name: 'ActivityDetail',
+        params: {
+          item: item
+        }
+      })
     },
     toAddActivity () {
       this.$router.push('/addactivity')
