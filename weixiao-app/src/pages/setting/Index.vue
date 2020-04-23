@@ -36,11 +36,11 @@
           <span>{{postCollectNum}}</span>
         </van-grid-item>
         <van-grid-item>
-          <van-icon name="coupon" size="40"/>
+          <van-icon name="coupon" size="40" @click="toMyContent()"/>
           <span>{{postContentNum}}</span>
         </van-grid-item>
         <van-grid-item>
-          <van-icon name="flag-o" size="40"/>
+          <van-icon name="flag-o" size="40" @click="toMyActivity()"/>
           <span>{{postActivityNum + postSignNum}}</span>
         </van-grid-item>
       </van-grid>
@@ -51,7 +51,7 @@
       <van-cell title="个人信息" is-link to="/myinfo"/>
       <van-cell title="设置" is-link to="/mysetting"/>
       <van-cell title="举报中心" is-link to="/report"/>
-      <van-cell title="反馈" is-link />
+      <van-cell title="反馈" is-link/>
     </div>
 
     <van-button type="primary" round color="red" class="logoutButton" @click="logout">退出登录</van-button>
@@ -117,11 +117,16 @@ export default {
       })
     },
     editAutograph () {
-      console.log('db')
       this.edit = false
     },
     toMyCollect () {
-      this.$router.push("/mycollect")
+      this.$router.push('/mycollect')
+    },
+    toMyContent () {
+      this.$router.push('/mycontent')
+    },
+    toMyActivity () {
+      this.$router.push('/myactivity')
     },
     logout () {
       removeToken()

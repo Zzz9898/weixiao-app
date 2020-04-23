@@ -35,7 +35,7 @@
             v-show="flag"
           >
             <van-skeleton title avatar :row="5" :loading="isShow" v-for="item in list" :key="item.id">
-              <div class="contentItem animated fadeIn" style="display: flex;margin-top: 5px;background: white;padding: 5px;" @click="toDetail(item)">
+              <div class="contentItem animated fadeIn" style="display: flex;margin-top: 5px;background: white;padding: 5px;">
                 <van-image round :src="item.avatar" class="contentItem-img" @click="toInfo(item.studentId, item.avatar, item.nickname)"/>
                 <div class="contentItem-content">
                   <h3 class="contentItem-publisher">{{item.nickname}}</h3>
@@ -279,7 +279,7 @@ export default {
       this.$router.push({
         name: 'ContentDetail',
         params: {
-          id: item.id,
+          item: item,
           studentId: this.$store.getters.id
         }
       })

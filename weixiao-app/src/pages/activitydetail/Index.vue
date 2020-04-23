@@ -28,7 +28,7 @@
       </div>
     </div>
     <div style="background: white;text-align: right;padding-right: 15px;">
-      <van-icon name="friends-o" :badge="activity.signNumber" style="margin-right: 5px;" color="#ADD8E6" v-show="activity.type === 2" @click="toSignMessage(activity.id, activity.title, activity.signNumber)"/>
+      <van-icon name="friends-o" :badge="activity.signNumber" style="margin-right: 5px;" color="#ADD8E6" v-show="activity.type === 2" @click="toSignMessage(activity.id, activity.title, activity.signNumber, activity.studentId)"/>
     </div>
     <div style="text-align: right;background: white;padding-right: 5px;">
       <span class="contentItem-other">时间：{{activity.releaseTime}}</span>
@@ -67,17 +67,29 @@ export default {
     onClickLeft () {
       this.$router.go(-1)
     },
-    toSignMessage (id, title, signNumber) {
-      Dialog.confirm({
-        title: title,
-        message: '该活动共' + signNumber + '人报名哦！赶紧去报名吧~',
-        confirmButtonText: '前往报名'
-      }).then(() => {
-        // on confirm
-        this.$router.push('/Success')
-      }).catch(() => {
-        // on cancel
-      })
+    toSignMessage (id, title, signNumber, studentId) {
+      const myId = this.$store.getters.id
+      if (myId === studentId) {
+        Dialog.confirm({
+          title: title,
+          message: '该活动共' + signNumber + '人报名哦！',
+          confirmButtonText: '查看报名'
+        }).then(() => {
+          // on confirm
+        }).catch(() => {
+          // on cancel
+        })
+      } else {
+        Dialog.confirm({
+          title: title,
+          message: '该活动共' + signNumber + '人报名哦！赶紧去报名吧~',
+          confirmButtonText: '前往报名'
+        }).then(() => {
+          // on confirm
+        }).catch(() => {
+          // on cancel
+        })
+      }
     },
     clickImages (images) {
       ImagePreview({

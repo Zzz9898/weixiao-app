@@ -218,6 +218,9 @@ export default {
         }
         postActivity(params).then(res => {
           Notify({ type: 'success', message: '发布成功' })
+          setTimeout(() => {
+            this.$router.go(-1)
+          }, 1000)
         })
       }
     },

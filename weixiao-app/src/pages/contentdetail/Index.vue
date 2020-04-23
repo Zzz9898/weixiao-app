@@ -108,7 +108,9 @@ export default {
       })
     },
     initData () {
-      this.id = this.$route.params.id
+      this.id = this.$route.params.item.id
+      this.content = this.$route.params.item
+      this.content.image = this.content.images
       this.studentId = this.$route.params.studentId
     },
     detail () {

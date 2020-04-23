@@ -118,6 +118,54 @@ export default new Router({
       }
     },
     {
+      path: '/mycontent',
+      name: 'MyContent',
+      component: () => import('@/pages/mycontent/Index'),
+      meta: {
+        showTabbar: false
+      }
+    },
+    {
+      path: '/myactivity',
+      name: 'MyActivity',
+      component: () => import('@/pages/myactivity/Index'),
+      meta: {
+        showTabbar: false
+      }
+    },
+    {
+      path: '/mypublish',
+      name: 'MyPublish',
+      component: () => import('@/pages/myactivity/MyPublish'),
+      meta: {
+        showTabbar: false
+      }
+    },
+    {
+      path: '/myparticipation',
+      name: 'MyParticipation',
+      component: () => import('@/pages/myactivity/MyParticipation'),
+      meta: {
+        showTabbar: false
+      }
+    },
+    {
+      path: '/sign',
+      name: 'Sign',
+      component: () => import('@/pages/sign/Index'),
+      meta: {
+        showTabbar: false
+      }
+    },
+    {
+      path: '/signlist',
+      name: 'SignList',
+      component: () => import('@/pages/signlist/Index'),
+      meta: {
+        showTabbar: false
+      }
+    },
+    {
       path: '/report',
       name: 'Report',
       component: () => import('@/pages/Report/Index'),

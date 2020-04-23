@@ -97,7 +97,7 @@
                 </div>
               </div>
               <div style="background: white;text-align: right;padding-right: 15px;">
-                <van-icon name="friends-o" :badge="item.signNumber" style="margin-right: 5px;" color="#ADD8E6" v-show="item.type === 2" @click="toSignMessage(item.id, item.title, item.signNumber)"/>
+                <van-icon name="friends-o" :badge="item.signNumber" style="margin-right: 5px;" color="#ADD8E6" v-show="item.type === 2" @click="toSignMessage(item.id, item.title, item.signNumber, item.maxNumber, item.studentId)"/>
                 <van-icon name="comment-o" color="#DEB887" @click="showComment = true"/>
               </div>
               <div style="text-align: right;background: white;padding-right: 5px;">
@@ -158,6 +158,7 @@
 </template>
 
 <script>
+import { checkSignActivity } from '@/api/other'
 import { ImagePreview, Dialog } from 'vant'
 import Department from '@/resources/Department'
 import { getCategory } from '@/api/category'
@@ -194,7 +195,8 @@ export default {
       categories: [],
       activityStateOption: [
         { text: '未结束', value: 2 },
-        { text: '已结束', value: 4 }
+        { text: '已结束', value: 4 },
+        { text: '已取消', value: 5 }
       ],
       activityTypeOption: [
         { text: '全部', value: 0 },
@@ -252,17 +254,51 @@ export default {
         }
       })
     },
-    toSignMessage (id, title, signNumber) {
-      Dialog.confirm({
-        title: title,
-        message: '该活动共' + signNumber + '人报名哦！赶紧去报名吧~',
-        confirmButtonText: '前往报名'
-      }).then(() => {
-        // on confirm
-        this.$router.push('/Success')
-      }).catch(() => {
-        // on cancel
-      })
+    toSignMessage (id, title, signNumber, studentId, maxNumber) {
+      const myId = this.$store.getters.id
+      if (myId === studentId) {
+        Dialog.confirm({
+          title: title,
+          message: '该活动共' + signNumber + '人报名哦！',
+          confirmButtonText: '查看报名'
+        }).then(() => {
+          // on confirm
+        }).catch(() => {
+          // on cancel
+        })
+      } else {
+        Dialog.confirm({
+          title: title,
+          message: '该活动共' + signNumber + '人报名哦！赶紧去报名吧~',
+          confirmButtonText: '前往报名'
+        }).then(() => {
+          // on confirm
+          if (signNumber >= maxNumber) {
+            Dialog({ message: '该活动已报满哦~' })
+          } else {
+            const paras = {
+              activityId: id,
+              studentId: this.$store.getters.id
+            }
+            checkSignActivity(paras).then(res => {
+              const flag = res.data
+              if (flag) {
+
+              } else {
+                this.$router.push({
+                  path: '/sign',
+                  query: {
+                    id: id,
+                    title: title
+                  }
+                })
+              }
+            })
+          }
+        }).catch(() => {
+          // on cancel
+        })
+      }
     },
     onLoad () {
       if (this.refreshing) {
