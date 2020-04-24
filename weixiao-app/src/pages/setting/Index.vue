@@ -47,11 +47,11 @@
     </div>
 
     <div class="cellItems">
-      <van-cell title="我关注的" is-link />
+      <van-cell title="我关注的" is-link to="/myfollow"/>
       <van-cell title="个人信息" is-link to="/myinfo"/>
       <van-cell title="设置" is-link to="/mysetting"/>
       <van-cell title="举报中心" is-link to="/report"/>
-      <van-cell title="反馈" is-link/>
+      <van-cell title="反馈" is-link to="/feedback"/>
     </div>
 
     <van-button type="primary" round color="red" class="logoutButton" @click="logout">退出登录</van-button>

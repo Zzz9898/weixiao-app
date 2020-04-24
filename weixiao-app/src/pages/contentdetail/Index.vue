@@ -24,6 +24,7 @@
       <van-icon v-else name="like" :badge="content.likeNum" style="margin-right: 5px;" color="red" @click="handleUnLike(content.id)"/>
       <van-icon v-if="!content.collect" name="star-o" color="#DEB887" @click="handleCollect(content.id)"/>
       <van-icon v-else name="star" color="#FF7F50" @click="handleUnCollect(content.id)"/>
+      <van-icon name="warning-o" @click="toReport(content)"/>
     </div>
 
     <div style="text-align: right;background: white;padding-right: 5px;">
@@ -120,6 +121,17 @@ export default {
       }
       getDetail(params).then(res => {
         this.content = res.data
+      })
+    },
+    toReport (content) {
+      this.$router.push({
+        path: '/report',
+        query: {
+          categoryId: content.category,
+          title: content.content,
+          postId: content.id,
+          reportStudentId: content.studentId
+        }
       })
     }
   },

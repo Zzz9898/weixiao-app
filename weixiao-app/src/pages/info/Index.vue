@@ -8,8 +8,9 @@
 
     <div style="background: white;padding-bottom: 5px;">
       <van-image :src="avatar" width="100" height="100" round class="avatar" @click="toChat"/><br/>
-      <van-button round type="info" size="small" color="#20B2AA" v-show="!isFollow">关注</van-button>
-      <van-button round icon="passed" type="primary" size="small" v-show="isFollow">已关注</van-button>
+      <van-button round type="info" size="small" color="#20B2AA" v-show="!isFollow && show" @click="toFollow()">关注</van-button>
+      <van-button round icon="passed" type="primary" size="small" v-show="isFollow && show"
+      @click="toUnFollow()">取消关注</van-button>
     </div>
 
     <div class="thingItems">
@@ -37,7 +38,8 @@
 </template>
 
 <script>
-import { getPostInfo } from './api/Info'
+import { getPostInfo, checkFollow, postFollow, cancelFollow } from './api/Info'
+import { Notify } from 'vant'
 export default {
   name: 'InfoIndex',
   data () {
@@ -49,7 +51,8 @@ export default {
       postActivityNum: 0,
       postSignNum: 0,
       postCollectNum: 0,
-      isFollow: false
+      isFollow: false,
+      show: false
     }
   },
   methods: {
@@ -81,11 +84,42 @@ export default {
         this.postSignNum = res.data.activitySignNum
         this.postCollectNum = res.data.collectNum
       })
+    },
+    getCheckFollow () {
+      const params = {
+        studentid: this.$store.getters.id,
+        followstudentid: this.id
+      }
+      checkFollow(params).then(res => {
+        this.isFollow = res.data
+        this.show = true
+      })
+    },
+    toFollow () {
+      const params = {
+        studentId: this.$store.getters.id,
+        followStudentId: this.id
+      }
+      postFollow(params).then(res => {
+        this.isFollow = true
+        Notify({ type: 'success', message: '关注成功' })
+      })
+    },
+    toUnFollow () {
+      const params = {
+        studentid: this.$store.getters.id,
+        followstudentid: this.id
+      }
+      cancelFollow(params).then(res => {
+        this.isFollow = false
+        Notify({ type: 'success', message: '取消成功' })
+      })
     }
   },
   mounted: function () {
     this.getParams()
     this.getPostInfo()
+    this.getCheckFollow()
   }
 }
 </script>

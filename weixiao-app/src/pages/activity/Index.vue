@@ -262,6 +262,7 @@ export default {
           message: '该活动共' + signNumber + '人报名哦！',
           confirmButtonText: '查看报名'
         }).then(() => {
+          this.toSignList(id)
           // on confirm
         }).catch(() => {
           // on cancel
@@ -283,7 +284,7 @@ export default {
             checkSignActivity(paras).then(res => {
               const flag = res.data
               if (flag) {
-
+                this.toSignList(id)
               } else {
                 this.$router.push({
                   path: '/sign',
@@ -299,6 +300,14 @@ export default {
           // on cancel
         })
       }
+    },
+    toSignList (id) {
+      this.$router.push({
+        path: '/signlist',
+        query: {
+          activityId: id
+        }
+      })
     },
     onLoad () {
       if (this.refreshing) {

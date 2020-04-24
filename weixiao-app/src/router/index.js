@@ -150,6 +150,14 @@ export default new Router({
       }
     },
     {
+      path: '/myfollow',
+      name: 'MyFollow',
+      component: () => import('@/pages/myfollow/Index'),
+      meta: {
+        showTabbar: false
+      }
+    },
+    {
       path: '/sign',
       name: 'Sign',
       component: () => import('@/pages/sign/Index'),
@@ -169,6 +177,14 @@ export default new Router({
       path: '/report',
       name: 'Report',
       component: () => import('@/pages/Report/Index'),
+      meta: {
+        showTabbar: false
+      }
+    },
+    {
+      path: '/feedback',
+      name: 'Feedback',
+      component: () => import('@/pages/feedback/Index'),
       meta: {
         showTabbar: false
       }

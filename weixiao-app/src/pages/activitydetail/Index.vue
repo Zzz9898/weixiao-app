@@ -28,7 +28,7 @@
       </div>
     </div>
     <div style="background: white;text-align: right;padding-right: 15px;">
-      <van-icon name="friends-o" :badge="activity.signNumber" style="margin-right: 5px;" color="#ADD8E6" v-show="activity.type === 2" @click="toSignMessage(activity.id, activity.title, activity.signNumber, activity.studentId)"/>
+      <van-icon name="friends-o" :badge="activity.signNumber" style="margin-right: 5px;" color="#ADD8E6" v-show="activity.type === 2" @click="toSignMessage(activity.id, activity.title, activity.signNumber, activity.studentId, activity.maxNumber)"/>
     </div>
     <div style="text-align: right;background: white;padding-right: 5px;">
       <span class="contentItem-other">时间：{{activity.releaseTime}}</span>
@@ -38,6 +38,7 @@
 
 <script>
 import { Dialog, ImagePreview } from 'vant'
+import { checkSignActivity } from '@/api/other'
 export default {
   name: 'ActivityDetail',
   data () {
@@ -67,7 +68,7 @@ export default {
     onClickLeft () {
       this.$router.go(-1)
     },
-    toSignMessage (id, title, signNumber, studentId) {
+    toSignMessage (id, title, signNumber, studentId, maxNumber) {
       const myId = this.$store.getters.id
       if (myId === studentId) {
         Dialog.confirm({
@@ -75,6 +76,7 @@ export default {
           message: '该活动共' + signNumber + '人报名哦！',
           confirmButtonText: '查看报名'
         }).then(() => {
+          this.toSignList(id)
           // on confirm
         }).catch(() => {
           // on cancel
@@ -86,10 +88,40 @@ export default {
           confirmButtonText: '前往报名'
         }).then(() => {
           // on confirm
+          if (signNumber >= maxNumber) {
+            Dialog({ message: '该活动已报满哦~' })
+          } else {
+            const paras = {
+              activityId: id,
+              studentId: this.$store.getters.id
+            }
+            checkSignActivity(paras).then(res => {
+              const flag = res.data
+              if (flag) {
+                this.toSignList(id)
+              } else {
+                this.$router.push({
+                  path: '/sign',
+                  query: {
+                    id: id,
+                    title: title
+                  }
+                })
+              }
+            })
+          }
         }).catch(() => {
           // on cancel
         })
       }
+    },
+    toSignList (id) {
+      this.$router.push({
+        path: '/signlist',
+        query: {
+          activityId: id
+        }
+      })
     },
     clickImages (images) {
       ImagePreview({

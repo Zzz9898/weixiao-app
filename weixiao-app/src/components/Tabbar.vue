@@ -13,7 +13,7 @@
       <van-tabbar-item name="find" icon="eye-o" replace to="/index">
         <span>发现</span>
       </van-tabbar-item>
-      <van-tabbar-item name="chat" icon="chat-o" replace badge="5" to="/chatlist">
+      <van-tabbar-item name="chat" icon="chat-o" replace dot to="/chatlist">
         <span>消息</span>
       </van-tabbar-item>
       <van-tabbar-item name="setting" icon="setting-o" replace to="/setting">

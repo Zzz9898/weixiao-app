@@ -90,8 +90,17 @@ export default {
         confirmButtonText: '查看报名'
       }).then(() => {
         // on confirm
+        this.toSignList(id)
       }).catch(() => {
         // on cancel
+      })
+    },
+    toSignList (id) {
+      this.$router.push({
+        path: '/signlist',
+        query: {
+          activityId: id
+        }
       })
     },
     onRefresh () {
