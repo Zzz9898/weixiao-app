@@ -11,7 +11,7 @@
               icon="add-o"
             >
               <div>
-                <van-image round :src="item.url" style="display: block;"/>
+                <van-image round :src="item.url" width="48px" height="48px" style="display: block;"/>
                 <span>{{item.desc}}</span>
               </div>
             </van-grid-item>
@@ -37,36 +37,40 @@ export default {
         desc: '运动'
       }, {
         id: '3',
-        url: 'http://zcoder.top:8080/images/home/study.jpg',
-        desc: '学习'
+        url: 'http://zcoder.top:8080/images/home/car.jpg',
+        desc: '拼车'
       }, {
         id: '4',
-        url: 'http://zcoder.top:8080/images/home/sport.jpg',
-        desc: '运动'
+        url: 'http://zcoder.top:8080/images/home/search.jpg',
+        desc: '搜用户'
       }, {
         id: '5',
-        url: 'http://zcoder.top:8080/images/home/study.jpg',
-        desc: '学习'
+        url: 'http://zcoder.top:8080/images/home/activity.jpg',
+        desc: '活动'
       }, {
         id: '6',
-        url: 'http://zcoder.top:8080/images/home/study.jpg',
-        desc: '学习'
+        url: 'http://zcoder.top:8080/images/home/discover.jpg',
+        desc: '发现'
       }, {
         id: '7',
-        url: 'http://zcoder.top:8080/images/home/sport.jpg',
-        desc: '运动'
+        url: 'http://zcoder.top:8080/images/home/talking.jpg',
+        desc: '话题'
       }, {
         id: '8',
-        url: 'http://zcoder.top:8080/images/home/study.jpg',
-        desc: '学习'
+        url: 'http://zcoder.top:8080/images/home/debunk.jpg',
+        desc: '吐槽'
       }, {
         id: '9',
-        url: 'http://zcoder.top:8080/images/home/sport.jpg',
-        desc: '运动'
+        url: 'http://zcoder.top:8080/images/home/class.jpg',
+        desc: '班级'
       }, {
         id: '10',
-        url: 'http://zcoder.top:8080/images/home/study.jpg',
-        desc: '学习'
+        url: 'http://zcoder.top:8080/images/home/room.jpg',
+        desc: '寝室'
+      }, {
+        id: '11',
+        url: 'http://zcoder.top:8080/images/home/more.jpg',
+        desc: '更多'
       }]
     }
   },
@@ -87,7 +91,9 @@ export default {
               url: '',
               desc: ''
             }
-            pages[page].push(data)
+            if (data.id > 0) {
+              pages[page].push(data)
+            }
           }
         }
       })

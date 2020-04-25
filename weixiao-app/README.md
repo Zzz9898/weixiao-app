@@ -91,3 +91,8 @@ let arr = Object.entries(obj)
 @/store/user.js
 @/pages/chat/Index
 @/pages/index/content.js
+
+##使用vue-navigation报错
+```
+npm i vue-router@3.0 -S
+```

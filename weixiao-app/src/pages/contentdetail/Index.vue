@@ -6,7 +6,7 @@
       @click-left="onClickLeft"
     />
     <div class="contentItem animated fadeIn" style="display: flex;margin-top: 5px;background: white;padding: 5px;">
-      <van-image round :src="content.avatar" class="contentItem-img"/>
+      <van-image round :src="content.avatar" class="contentItem-img"  @click="toInfo(content.studentId, content.avatar, content.nickname)"/>
       <div class="contentItem-content">
         <h3 class="contentItem-publisher">{{content.nickname}}</h3>
         <p class="contentItem-more" v-html="content.content"></p>
@@ -61,6 +61,22 @@ export default {
     }
   },
   methods: {
+    toInfo (studentId, avatar, nickname) {
+      if (studentId === this.$store.getters.id) {
+        this.$router.push({
+          name: 'Setting'
+        })
+      } else {
+        this.$router.push({
+          name: 'Info',
+          params: {
+            studentId: studentId,
+            avatar: avatar,
+            nickname: nickname
+          }
+        })
+      }
+    },
     onClickLeft () {
       this.$router.go(-1)
     },

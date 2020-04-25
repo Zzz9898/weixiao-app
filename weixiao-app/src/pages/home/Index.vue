@@ -1,5 +1,5 @@
 <template>
-  <div class="animated fadeIn">
+  <div class="animated fadeIn" style="padding-bottom: 50px;">
     <home-swiper></home-swiper>
 
     <van-notice-bar
@@ -12,21 +12,33 @@
 
     <home-icon></home-icon>
 
+    <home-hot-acitivity></home-hot-acitivity>
+
+    <home-hot-content></home-hot-content>
+
+    <home-other></home-other>
+
   </div>
 </template>
 
 <script>
 import HomeIcon from './Icon'
 import HomeSwiper from './Swiper'
+import HomeHotAcitivity from './HotActivity'
+import HomeHotContent from './HotContent'
+import HomeOther from './Other'
 export default {
   name: 'HomeIndex',
   components: {
     HomeSwiper,
-    HomeIcon
+    HomeIcon,
+    HomeHotAcitivity,
+    HomeHotContent,
+    HomeOther
   },
   data () {
     return {
-      notice: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
+      notice: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
     }
   }
 }

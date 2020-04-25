@@ -7,7 +7,7 @@
     />
 
     <div class="contentItem animated fadeIn" style="display: flex;margin-top: 5px;background: white;padding: 5px;">
-      <van-image round :src="activity.avatar" class="contentItem-img"/>
+      <van-image round :src="activity.avatar" class="contentItem-img"  @click="toInfo(activity.studentId, activity.avatar, activity.nickname)"/>
       <div class="contentItem-content">
         <h3 class="contentItem-publisher">{{activity.nickname}}</h3>
         <div style="text-align: center;">
@@ -65,6 +65,16 @@ export default {
     }
   },
   methods: {
+    toInfo (studentId, avatar, nickname) {
+      this.$router.push({
+        name: 'Info',
+        params: {
+          studentId: studentId,
+          avatar: avatar,
+          nickname: nickname
+        }
+      })
+    },
     onClickLeft () {
       this.$router.go(-1)
     },

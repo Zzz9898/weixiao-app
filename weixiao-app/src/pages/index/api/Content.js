@@ -10,7 +10,7 @@ export function getContent (params) {
 
 export function getChatOff (params) {
   return request({
-    url: 'http://192.168.1.102:6004/message/messageContents',
+    url: 'http://192.168.1.104:6004/message/messageContents',
     method: 'get',
     params: params
   })
@@ -18,7 +18,7 @@ export function getChatOff (params) {
 
 export function batchSign (params) {
   return request({
-    url: 'http://192.168.1.102:6004/message/batchsign',
+    url: 'http://192.168.1.104:6004/message/batchsign',
     method: 'put',
     params: params
   })
