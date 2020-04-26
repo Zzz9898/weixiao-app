@@ -154,7 +154,7 @@ const user = {
             const role = ['common']
             commit('SET_ROLES', role)
           }
-          const ws = new WebSocket('ws://192.168.1.104:8088/ws')
+          const ws = new WebSocket('ws://134.175.171.235:8088/ws')
           ws.onopen = () => {
             console.log('socket连接成功')
             const chatInfo = {

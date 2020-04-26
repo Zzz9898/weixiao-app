@@ -17,6 +17,30 @@
     </van-sticky>
 
     <van-pull-refresh v-model="isLoading" @refresh="onRefresh">
+      <van-swipe-cell>
+        <div class="contentItem animated fadeIn" style="display: flex;background: white;padding: 5px;" @click="toChat(77, 'http://img1.imgtn.bdimg.com/it/u=3999684833,1365604362&fm=26&gp=0.jpg', '张家伟')">
+          <van-image round src="http://img1.imgtn.bdimg.com/it/u=3999684833,1365604362&fm=26&gp=0.jpg" class="contentItem-img" />
+          <div class="contentItem-content">
+            <h3 class="contentItem-publisher">张家伟</h3>
+            <p class="contentItem-more">你好，快来找我聊天~</p>
+          </div>
+          <div class="contentItem-time">
+            2020-04-26 09:23:46
+            <p style="padding: 0;margin: 0;">
+              <van-tag round type="danger">1</van-tag>
+            </p>
+          </div>
+        </div>
+        <template #right>
+          <van-button
+            square
+            text="删除"
+            type="danger"
+            class="delete-button"
+            @click="noDelete()"
+          />
+        </template>
+      </van-swipe-cell>
       <van-swipe-cell v-for="item in chatList" :key="item.receiverId">
         <div class="contentItem animated fadeIn" style="display: flex;background: white;padding: 5px;" @click="toChat(item.receiverId, item.avatar, item.nickname)">
           <van-image round :src="item.avatar" class="contentItem-img" />
@@ -48,6 +72,7 @@
 </template>
 
 <script>
+import { Dialog } from 'vant'
 export default {
   name: 'ChatIndex',
   data () {
@@ -61,6 +86,12 @@ export default {
     }
   },
   methods: {
+    noDelete () {
+      Dialog.alert({
+        message: '就别想删我了，来找我聊天~'
+      }).then(() => {
+      })
+    },
     deleteChatItem (receiverId) {
       this.chatList.map((item, ind) => {
         if (item.receiverId === receiverId) {

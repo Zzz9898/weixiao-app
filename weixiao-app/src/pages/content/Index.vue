@@ -48,7 +48,7 @@
 import { getMaxSize } from '@/api/config'
 import { getCategory } from '@/api/category'
 import { upload, postContent } from './api/Content'
-import { Toast } from 'vant'
+import { Toast, Notify } from 'vant'
 export default {
   name: 'ContentAdd',
   data () {
@@ -112,7 +112,10 @@ export default {
         category: this.value
       }
       postContent(params).then(res => {
-        console.log(res)
+        Notify({ type: 'success', message: '发布成功' })
+        setTimeout(() => {
+          this.$router.go(-1)
+        }, 1000)
       })
     }
   },

@@ -221,7 +221,7 @@ export default {
       //   content: '嗯，适合做壁纸',
       //   dateTime: '2017-12-02 14:26:58'
       // }],
-      path: 'ws://192.168.1.104:8088/ws',
+      path: 'ws://134.175.171.235:8088/ws',
       socket: '',
       receiverContent: [],
       sendTime: '',
