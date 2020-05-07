@@ -51,7 +51,7 @@
               </div>
               <div style="background: white;text-align: right;padding-right: 15px;">
                 <van-icon name="browsing-history-o" :badge="item.lookNum" style="margin-right: 5px;"/>
-                <van-icon name="comment-o" color="#DEB887" @click="showComment = true"/>
+                <van-icon name="comment-o" color="#DEB887" @click="getComment(item.id)"/>
               </div>
               <div style="text-align: right;background: white;padding-right: 5px;">
                 <span class="contentItem-other">时间：{{item.releaseTime}}</span>
@@ -67,56 +67,23 @@
       closeable
       position="bottom"
       :style="style">
-      <van-list
-        v-model="commentListLoading"
-        :finished="commentFinished"
-        finished-text="我是有底线的~"
-        @load="commentOnLoad"
-      >
-        <van-skeleton
-          title
-          avatar
-          :row="2"
-          :loading="commentLoading"
-          v-for="item in commentList"
-          :key="item.id"
-      >
-          <div style="display: flex;margin-top: 5px;background: white;padding: 5px;">
-            <img :src="item.avatar" class="comment-img" />
-            <div class="comment-content">
-              <h3 class="comment-publisher">{{item.nickname}}</h3>
-              <p class="comment-more">{{item.content}}</p>
-            </div>
-          </div>
-          <div style="text-align: right;background: white;padding-right: 5px;">
-            <span class="comment-other">时间：{{item.releaseTime}}</span>
-          </div>
-        </van-skeleton>
-      </van-list>
-      <van-field
-        v-model="commentMessage"
-        type="textarea"
-        maxlength="100"
-        placeholder="请输入评论"
-        clearable
-        show-word-limit
-      >
-        <template #button>
-          <van-button size="small" type="primary">评论</van-button>
-        </template>
-      </van-field>
+      <comment v-if="showComment" :id="itemId" :category="itemCategory"></comment>
     </van-popup>
 
   </div>
 </template>
 
 <script>
+import Comment from '@/components/Comment'
 import { ImagePreview } from 'vant'
 import Department from '@/resources/Department'
 import { getCategory } from '@/api/category'
 import { getContent, getChatOff, batchSign } from './api/Content'
 export default {
   name: 'ContentIndex',
+  components: {
+    Comment
+  },
   data () {
     return {
       flag: false,
@@ -144,6 +111,8 @@ export default {
         { text: '男', value: 1 },
         { text: '女', value: 2 }
       ],
+      itemId: 0,
+      itemCategory: 2,
       commentList: [{
         id: '1',
         studentId: '1',
@@ -180,6 +149,10 @@ export default {
     }
   },
   methods: {
+    getComment (id) {
+      this.itemId = id
+      this.showComment = true
+    },
     toInfo (studentId, avatar, nickname) {
       if (studentId === this.$store.getters.id) {
         this.$router.push({

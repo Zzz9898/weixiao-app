@@ -38,7 +38,7 @@
           </div>
           <div style="background: white;text-align: right;padding-right: 15px;">
             <van-icon name="browsing-history-o" :badge="item.lookNum" style="margin-right: 5px;"/>
-            <van-icon name="comment-o" color="#DEB887"/>
+            <van-icon name="comment-o" color="#DEB887" @click="getComment(item.id)"/>
             <van-icon name="close" @click="deleteContent(item.id)"/>
           </div>
           <div style="text-align: right;background: white;padding-right: 5px;">
@@ -49,26 +49,48 @@
       </van-list>
     </van-pull-refresh>
 
+    <van-popup
+      v-model="showComment"
+      closeable
+      position="bottom"
+      :style="style">
+      <comment v-if="showComment" :id="itemId" :category="itemCategory"></comment>
+    </van-popup>
+
   </div>
 </template>
 
 <script>
+import Comment from '@/components/Comment'
 import { getMyContent, deleteMyContent } from './api/MyContent'
 import { ImagePreview, Dialog } from 'vant'
 export default {
   name: 'MyContent',
+  components: {
+    Comment
+  },
   data () {
     return {
+      showComment: false,
+      itemId: 0,
+      itemCategory: 2,
       loading: false,
       finished: false,
       refreshing: false,
       pageSize: 5,
       pageIndex: 0,
       totalRecords: '',
-      collects: []
+      collects: [],
+      style: {
+        height: '70%'
+      }
     }
   },
   methods: {
+    getComment (id) {
+      this.itemId = id
+      this.showComment = true
+    },
     onClickLeft () {
       this.$router.go(-1)
     },

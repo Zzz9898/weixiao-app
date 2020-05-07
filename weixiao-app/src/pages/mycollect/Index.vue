@@ -31,7 +31,7 @@
           </div>
           <div style="background: white;text-align: right;padding-right: 15px;">
             <van-icon name="browsing-history-o" :badge="item.lookNum" style="margin-right: 5px;"/>
-            <van-icon name="comment-o" color="#DEB887"/>
+            <van-icon name="comment-o" color="#DEB887" @click="getComment(item.id)"/>
           </div>
           <div style="text-align: right;background: white;padding-right: 5px;">
             <span class="contentItem-other">时间：{{item.releaseTime}}</span>
@@ -41,26 +41,48 @@
       </van-list>
     </van-pull-refresh>
 
+    <van-popup
+      v-model="showComment"
+      closeable
+      position="bottom"
+      :style="style">
+      <comment v-if="showComment" :id="itemId" :category="itemCategory"></comment>
+    </van-popup>
+
   </div>
 </template>
 
 <script>
+import Comment from '@/components/Comment'
 import { getMyCollect } from './api/MyCollect'
 import { ImagePreview } from 'vant'
 export default {
   name: 'MyCollect',
+  components: {
+    Comment
+  },
   data () {
     return {
+      itemId: 0,
+      itemCategory: 2,
+      showComment: false,
       loading: false,
       finished: false,
       refreshing: false,
       pageSize: 5,
       pageIndex: 0,
       totalRecords: '',
-      collects: []
+      collects: [],
+      style: {
+        height: '70%'
+      }
     }
   },
   methods: {
+    getComment (id) {
+      this.itemId = id
+      this.showComment = true
+    },
     onClickLeft () {
       this.$router.go(-1)
     },

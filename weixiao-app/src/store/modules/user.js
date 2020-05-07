@@ -154,7 +154,8 @@ const user = {
             const role = ['common']
             commit('SET_ROLES', role)
           }
-          const ws = new WebSocket('ws://134.175.171.235:8088/ws')
+          // const ws = new WebSocket('ws://134.175.171.235:8088/ws')
+          const ws = new WebSocket('ws://192.168.1.102:8088/ws')
           ws.onopen = () => {
             console.log('socket连接成功')
             const chatInfo = {
@@ -171,6 +172,14 @@ const user = {
               extend: ''
             }
             ws.send(JSON.stringify(dataContent))
+            const heartMessage = {
+              action: 7,
+              chatInfo: chatInfo,
+              extend: '发送心跳'
+            }
+            setInterval(() => {
+              ws.send(JSON.stringify(heartMessage))
+            }, 7000)
           }
           commit('SET_WS', ws)
           console.log(data)

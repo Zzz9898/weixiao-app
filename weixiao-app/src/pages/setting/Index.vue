@@ -130,6 +130,24 @@ export default {
     },
     logout () {
       removeToken()
+      const chatInfo = {
+        senderId: this.$store.getters.id,
+        senderAvatar: '',
+        senderNickname: '',
+        receiverId: '',
+        message: '',
+        msgId: 0
+      }
+      const dataContent = {
+        action: 8,
+        chatInfo: chatInfo,
+        extend: ''
+      }
+      this.$store.getters.websocket.send(JSON.stringify(dataContent))
+      // try {
+      //   this.$store.getters.websocket.send(JSON.stringify(dataContent))
+      // } catch (e) {
+      // }
       this.$router.replace({
         path: '/'
       })
